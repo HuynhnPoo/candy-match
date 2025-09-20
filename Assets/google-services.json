@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "945438211481",
+    "firebase_url": "https://saga-candy-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "saga-candy",
+    "storage_bucket": "saga-candy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945438211481:android:781cf7cea263c7910aa708",
+        "android_client_info": {
+          "package_name": "com.nqhuynh.candysaga"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGvhJp8oWRH7H2VvTkWf6MM6qcm1o_NqM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
