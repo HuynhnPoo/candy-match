@@ -8,9 +8,6 @@ public class ConfirmBtn : ButtonBase
     public override void OnClick()
     {
         hander = UIManager.Instance.managerCanvas.GetComponentInChildren<ConfirmFormHander>();
-
-        Debug.Log("hien thi cos hander" + hander.name);
-
         hander?.ForgotPass();
     }
 }

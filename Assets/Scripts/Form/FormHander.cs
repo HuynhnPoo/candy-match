@@ -1,12 +1,11 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class FormHander : MonoBehaviour,ICompoment
+public class FormHander : MonoBehaviour, ICompoment
 {
     [SerializeField] private NameInput nameInput;
     [SerializeField] private PasswordInput passwordInput;
@@ -21,26 +20,41 @@ public class FormHander : MonoBehaviour,ICompoment
     private void Awake()
     {
         LoadCompoment();
+
     }
-   
+
     public void Register()
     {
 
         UserList users = new UserList().LoadUsers();
-        
 
         string nameUser = nameInput.nameID;
         string password = passwordInput.password;
 
+
         if (!CheckIsEmptyString(nameUser, password)) return;
 
-        if (users.user.Exists(u => u.nameUser == nameUser)) return;
+        if (users.user.Exists(u => u.nameUser == nameUser))
+        {
+            UIManager.Instance.ShowNotification(false, "Thực hiện không thành công đăng kí");
 
-        users.user.Add(new DataUser { nameUser = nameUser, password = password });
+            GameManager.Instance.Notification = "Thực hiện không thành công đăng kí";
+            return;
+        }
+        else
+        {
+            string newId = users.GetIDAccout();
+            users.user.Add(new DataUser { id = newId, nameUser = nameUser, password = password });
 
-       users.SaveData(users);
+            Debug.Log("hien thi ra " + newId + " " + nameUser + "và ");
 
-        Debug.Log("dang ki thanh con tai khoan" + nameUser);
+            users.SaveData(users);
+            UIManager.Instance.ShowNotification(false, "Thực hiện thành công đăng kí");
+
+            GameManager.Instance.Notification = "Thực hiện thành công đăng kí";
+            DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = newId, nameUser = nameUser, password = password });
+
+        }
     }
 
     public void Login()
@@ -49,22 +63,45 @@ public class FormHander : MonoBehaviour,ICompoment
         string nameUser = nameInput.nameID;
         string password = passwordInput.password;
 
-
         if (!CheckIsEmptyString(nameUser, password)) return;
 
 
-        DataUser foundUser = users.user.Find(u => u.nameUser == nameUser && u.password == password);
-
-        if (foundUser != null)
+        if (CheckInernet())
         {
-            Debug.Log("thuc hien thanh cong dang nhap");
+            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser, (success) =>
+            {
+                if (success)
+                {
+                    UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập");
+                }
+                else
+                {
+                    UIManager.Instance.ShowNotification(false, "Thực hiện không thành công đăng nhập");
+                }
+            });
         }
         else
         {
-            Debug.Log("thuc hien dang nhap khong thanh cong");
-        }
+            DataUser foundUser = users.user.Find(u => u.nameUser == nameUser && u.password == password);
 
+            if (foundUser != null)
+            {
+                UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập offline");
+       
+            }
+            else
+            {
+                UIManager.Instance.ShowNotification(false, "Thực hiện thành công đăng nhập offline");
+            }
+        }
     }
+
+    bool CheckInernet()
+    {
+        return Application.internetReachability != NetworkReachability.NotReachable;
+    }
+
+
 
     bool CheckIsEmptyString(string name, string pass)
     {

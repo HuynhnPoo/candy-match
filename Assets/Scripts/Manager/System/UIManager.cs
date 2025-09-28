@@ -6,16 +6,22 @@ using UnityEngine.SceneManagement;
 public class UIManager : SingletonBase<UIManager>
 {
     [SerializeField] public GameObject loginForm { get; private set; }
+
+
+    // game obj scene form
     public GameObject forgotForm { get; private set; }
+    public GameObject notificationMess { get; private set; }
     public GameObject managerCanvas { get; private set; }
 
+    // game obj scene gameplay
 
+    public GameObject pausePn { get; private set; }
+    public GameObject gameoverPn { get; private set; }
 
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
-
 
 
     private void OnDisable()
@@ -36,10 +42,15 @@ public class UIManager : SingletonBase<UIManager>
     {
         if (SceneManager.GetActiveScene().name == SceneType.FORM.ToString())
         {
-            managerCanvas = GameObject.FindGameObjectWithTag(StringManager.gameCTRTag);
-            loginForm = FindGameObjectByNameHide.FindGameObjectByName(StringManager.LoginCanvas);
-            forgotForm = FindGameObjectByNameHide.FindGameObjectByName(StringManager.forgotCanvas);
-
+            this.managerCanvas = GameObject.FindGameObjectWithTag(StringManager.gameCTRTag);
+            this.loginForm = FindGameObjectByNameHide.FindGameObjectByName(StringManager.LoginCanvas);
+            this.forgotForm = FindGameObjectByNameHide.FindGameObjectByName(StringManager.forgotCanvas);
+            this.notificationMess = FindGameObjectByNameHide.FindGameObjectByName("Backgroud-noti");
+        }
+        else if (SceneManager.GetActiveScene().name == SceneType.GAMEPLAY.ToString())
+        {
+            this.gameoverPn = FindGameObjectByNameHide.FindGameObjectByName(StringManager.gameOverPn);
+            this.pausePn = FindGameObjectByNameHide.FindGameObjectByName(StringManager.pausePn);
         }
     }
     public enum SceneType
@@ -48,6 +59,22 @@ public class UIManager : SingletonBase<UIManager>
         MAINMENU,
         GAMEPLAY,
         LOADING
+    }
+
+    public void ShowNotification(bool isLogin, string notification)
+    {
+        notificationMess.SetActive(true);
+        GameManager.Instance.Notification = notification;
+        StartCoroutine(HideNofication(isLogin));
+    }
+
+    IEnumerator HideNofication(bool isLogin)
+    {
+        yield return new WaitForSeconds(0.8f);
+        notificationMess?.SetActive(false);
+        yield return null;
+
+        if (isLogin) UIManager.Instance.ChangeScene(UIManager.SceneType.GAMEPLAY);
     }
 
     public AsyncOperation ChangeScene(SceneType scene)

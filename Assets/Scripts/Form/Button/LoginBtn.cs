@@ -9,14 +9,7 @@ public class LoginBtn : ButtonBase
     {
         hander = UIManager.Instance.managerCanvas.GetComponentInChildren<FormHander>();
 
-        Debug.Log("hien thi cos hander"+hander.name);
-
         hander?.Login();
-    }
-
-    protected override void OnEnable()
-    {
-     
     }
 
 }

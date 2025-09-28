@@ -28,6 +28,10 @@ public class GridManager : MonoBehaviour, ICompoment
 
     private Vector2Int? selectCandy = null;
 
+    private void OnEnable()
+    {
+        GameManager.Instance.Init();
+    }
     public void LoadCompoment()
     {
 
@@ -44,7 +48,8 @@ public class GridManager : MonoBehaviour, ICompoment
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S)) SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        if (Input.GetKeyDown(KeyCode.V)) GameManager.Instance.Score=GameMechanics.AddScore(5);
+
     }
 
     void InstantiateGird()
@@ -102,6 +107,7 @@ public class GridManager : MonoBehaviour, ICompoment
             }
         }
     }
+
     public bool CheckMatchesForSwap(int rowA, int colA, int rowB, int colB)
     {
         HashSet<CandyVisual> matchesA = MatchCandy.FindAllMacth(visualGrid, width, height, rowA, colA);
@@ -112,7 +118,8 @@ public class GridManager : MonoBehaviour, ICompoment
         allMatches.UnionWith(matchesB);
         if (allMatches.Count >= 3)
         {
-          MatchCandy.DestroyAnfndRefill(visualGrid,this,new List<CandyVisual>(allMatches),candyPrefabs);
+            MatchCandy.DestroyAnfndRefill(visualGrid, this, new List<CandyVisual>(allMatches), candyPrefabs);
+           // GameManager.Instance.Score = GameMechanics.AddScore(5);
             return true;
         }
         return false;

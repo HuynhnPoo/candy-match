@@ -48,6 +48,8 @@ public class CandyVisual : MonoBehaviour
     private void OnEnable()
     {
          CandyName.LoadName(this.transform.name.Replace("(Clone)",""),this);
+
+        //Debug.Log(StringManager.pathDataUser);
     }
     // Start is called before the first frame update
     void Start()

@@ -6,7 +6,6 @@ public class ChangeFormBtn : ButtonBase
 {
     public override void OnClick()
     {
-        Debug.Log("hien thi ra form thuc hien " + gameObject.name);
         ChangeForm();
     }
 

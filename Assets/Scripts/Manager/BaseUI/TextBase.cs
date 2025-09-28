@@ -1,16 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public abstract class TextBase : MonoBehaviour,ICompoment
 {
-    [SerializeField] protected Text text;
+    [SerializeField] protected TextMeshProUGUI text;
 
     public void LoadCompoment()
     {
         if (text == null)
-        this.text=GetComponent<Text>();
+        this.text=GetComponent<TextMeshProUGUI>();
     }
 
     protected virtual void Awake()

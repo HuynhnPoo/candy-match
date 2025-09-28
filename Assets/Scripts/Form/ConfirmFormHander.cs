@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,36 +21,33 @@ public class ConfirmFormHander : MonoBehaviour, ICompoment
     {
         LoadCompoment();
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
-   public void ForgotPass()
+    public void ForgotPass()
     {
         string name = nameInput.nameID;
         string newPassword = passwordInput.password;
         string comfirmPass = confirmPassInput.comfirmPassword;
 
-        CheckIsEmptyString(name,newPassword,comfirmPass);
+        CheckIsEmptyString(name, newPassword, comfirmPass);
 
         UserList users = new UserList().LoadUsers();
 
         DataUser founderUser = users.user.Find(u => u.nameUser == name);
-        if (founderUser != null)
+        if (founderUser == null)
         {
-            founderUser.password = newPassword;
-            users.SaveData(users);
+            UIManager.Instance.ShowNotification(false, "Thực hiện không thành công đăng kí");
+            return;
         }
+        else
+        {
 
+            founderUser.password = newPassword;
+            string idUser = founderUser.id;
+            UIManager.Instance.ShowNotification(false, "Thực hiện thành công đăng kí");
+
+            users.SaveData(users);
+            DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = idUser, nameUser = name, password = newPassword });
+        }
     }
 
 

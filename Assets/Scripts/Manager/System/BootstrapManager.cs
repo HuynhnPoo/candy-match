@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,6 +35,7 @@ public class BootstrapManager : MonoBehaviour
         isBootstrapped = true;
         DontDestroyOnLoad(managerInstance);
         Debug.Log("Bootstrap complete. GameManager initialized in current scene.");
+        //SceneManager.LoadScene("FORM");
     }
 
     private void Awake()
@@ -54,7 +55,24 @@ public class BootstrapManager : MonoBehaviour
     {
         return isBootstrapped;
     }
+}
+
+public class PreprocessorDirectives
+{
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    public static void CheckFlatForm()
+    {
+#if UNITY_EDITOR
+        // Bật log cho Debug.Log khi đang trong Editor
+        Debug.unityLogger.logEnabled = true;
+#else
+        // Tắt log cho Debug.Log khi đã build (bản Release)
+        Debug.unityLogger.logEnabled = false;
+#endif
 
 
+
+    }
 }
 
