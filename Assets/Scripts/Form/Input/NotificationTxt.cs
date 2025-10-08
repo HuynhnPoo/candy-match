@@ -8,7 +8,4 @@ public class NotificationTxt : TextBase
     {
         this.text.SetText(GameManager.Instance.Notification);
     }
-
-
-
 }

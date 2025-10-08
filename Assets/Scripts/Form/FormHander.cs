@@ -33,28 +33,50 @@ public class FormHander : MonoBehaviour, ICompoment
 
 
         if (!CheckIsEmptyString(nameUser, password)) return;
-
-        if (users.user.Exists(u => u.nameUser == nameUser))
+        if (CheckInernet()) // kiem tra có internet có mạng để dang kí đây lên firebase
         {
-            UIManager.Instance.ShowNotification(false, "Thực hiện không thành công đăng kí");
+            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser,"", (success) =>
+            {
+                if (success)
+                {
+                    UIManager.Instance.ShowNotification(false, "Thực hiện không thành công đăng kí,tài khoản đã tồn tại");
+                }
+                else
+                {
+                    string newId = users.GetIDAccout();
+                    UIManager.Instance.ShowNotification(false, "Thực hiện thành công đăng kí"); // dang kí up len firebase
+                    DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = newId, nameUser = nameUser, password = password });
 
-            GameManager.Instance.Notification = "Thực hiện không thành công đăng kí";
-            return;
+                    //dang kí ghi vào json
+                    users.user.Add(new DataUser { id = newId, nameUser = nameUser, password = password });
+
+                    users.SaveData(users);
+                }
+            });
         }
         else
         {
-            string newId = users.GetIDAccout();
-            users.user.Add(new DataUser { id = newId, nameUser = nameUser, password = password });
 
-            Debug.Log("hien thi ra " + newId + " " + nameUser + "và ");
+            if (users.user.Exists(u => u.nameUser == nameUser))
+            {
+                UIManager.Instance.ShowNotification(false, "Thực hiện không thành công đăng kí");
 
-            users.SaveData(users);
-            UIManager.Instance.ShowNotification(false, "Thực hiện thành công đăng kí");
+                return;
+            }
+            else
+            {
+                string newId = users.GetIDAccout();
+                users.user.Add(new DataUser { id = newId, nameUser = nameUser, password = password });
 
-            GameManager.Instance.Notification = "Thực hiện thành công đăng kí";
-            DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = newId, nameUser = nameUser, password = password });
+                Debug.Log("hien thi ra " + newId + " " + nameUser + "và ");
 
+                users.SaveData(users);
+                UIManager.Instance.ShowNotification(false, "Thực hiện thành công đăng kí");
+                DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = newId, nameUser = nameUser, password = password });
+
+            }
         }
+
     }
 
     public void Login()
@@ -68,7 +90,7 @@ public class FormHander : MonoBehaviour, ICompoment
 
         if (CheckInernet())
         {
-            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser, (success) =>
+            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser,password, (success) =>
             {
                 if (success)
                 {
@@ -87,7 +109,7 @@ public class FormHander : MonoBehaviour, ICompoment
             if (foundUser != null)
             {
                 UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập offline");
-       
+
             }
             else
             {

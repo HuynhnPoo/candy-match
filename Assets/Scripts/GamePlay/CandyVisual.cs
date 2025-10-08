@@ -51,6 +51,7 @@ public class CandyVisual : MonoBehaviour
 
         //Debug.Log(StringManager.pathDataUser);
     }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,9 +78,7 @@ public class CandyVisual : MonoBehaviour
     {
         this.grid.SelectCandy(this.row,this.colum);
 
-        Debug.Log("ten hang " + row +"ten cot"+colum);
     }
 
   
 }
-

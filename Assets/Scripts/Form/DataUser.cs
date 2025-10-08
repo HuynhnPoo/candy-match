@@ -8,8 +8,6 @@ public class DataUser
     public string id;
     public string nameUser;
     public string password;
-
-
 }
 
 [System.Serializable]
@@ -47,7 +45,6 @@ public class UserList
             id = "NV" + index.ToString("D2");
         } while (user.user.Exists(user => user.id == id));
         return id;
-
     }
     
 }

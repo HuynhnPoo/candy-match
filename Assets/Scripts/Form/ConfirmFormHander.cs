@@ -7,7 +7,7 @@ public class ConfirmFormHander : MonoBehaviour, ICompoment
     [SerializeField] private NameInput nameInput;
     [SerializeField] private PasswordInput passwordInput;
     [SerializeField] private ConfirmPassInput confirmPassInput;
-    // [SerializeField] private Button jjjjj;
+   
 
     string path;
 

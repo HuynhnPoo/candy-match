@@ -74,7 +74,7 @@ public class UIManager : SingletonBase<UIManager>
         notificationMess?.SetActive(false);
         yield return null;
 
-        if (isLogin) UIManager.Instance.ChangeScene(UIManager.SceneType.GAMEPLAY);
+        if (isLogin) UIManager.Instance.ChangeScene(UIManager.SceneType.MAINMENU);
     }
 
     public AsyncOperation ChangeScene(SceneType scene)

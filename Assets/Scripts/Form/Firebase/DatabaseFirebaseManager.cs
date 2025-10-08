@@ -6,14 +6,11 @@ using Firebase.Database;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
-using UnityEngine.Tilemaps;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
 {
@@ -55,14 +52,14 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
                 Debug.Log("khơi tạo thành công firebase");
                 //
                 UpLoadAllData();// tải tất cả dữ liệu lên trên fire base khi bắt đầu game
-       // ReadDataOption("huynh0");
+                                // ReadDataOption("huynh0");
             }
             else
                 Debug.LogWarning("khởi tạo  firebase không thành công" + task.Exception);
 
         });
 #else
- UpLoadAllData();
+        UpLoadAllData();
 
 #endif
     }
@@ -86,31 +83,32 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
             Debug.Log("WebGL WriteData OK: " + result);
         }));
 #else //khi build ra pc va mb
-    // PC/Mobile: dùng Firebase SDK
-    string jsonUser = JsonUtility.ToJson(user);
-    dataRef.Child("Users").Child(user.id).SetRawJsonValueAsync(jsonUser).ContinueWithOnMainThread(task =>
-    {
-        if (task.IsCompleted)
+        // PC/Mobile: dùng Firebase SDK
+        string jsonUser = JsonUtility.ToJson(user);
+        dataRef.Child("Users").Child(user.id).SetRawJsonValueAsync(jsonUser).ContinueWithOnMainThread(task =>
         {
-            Debug.Log("Firebase SDK ghi dữ liệu thành công");
-        }
-        else
-        {
-            Debug.LogError("Firebase SDK lỗi: " + task.Exception);
-        }
-    });
+            if (task.IsCompleted)
+            {
+                Debug.Log("Firebase SDK ghi dữ liệu thành công");
+            }
+            else
+            {
+                Debug.LogError("Firebase SDK lỗi: " + task.Exception);
+            }
+        });
 #endif
     }
 
-    public void ReadDataOption(string user,Action<bool> onCompelte)
+    public void ReadDataOption(string user, string password = "", Action<bool> onComplete = null)
     {
 
 #if UNITY_WEBGL //su dung khi build ra wed
-        StartCoroutine(GetDataCoroutine(user, (result) =>
+        StartCoroutine(GetDataCoroutine(user, password, (result) =>
         {
             Debug.Log("WebGL Read Data OK: " + result);
-             onCompelte?.Invoke(true);
-
+            if (!string.IsNullOrEmpty(result))
+                onComplete?.Invoke(true);
+            else onComplete?.Invoke(false);
         }));
 #else // su dung khi build ra wed
         dataRef.Child("Users").GetValueAsync().ContinueWithOnMainThread(task =>
@@ -124,25 +122,38 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
                 {
                     foreach (var child in dataSnap.Children)
                     {
-                        string json= child.GetRawJsonValue();
-                        DataUser userData =JsonUtility.FromJson<DataUser>(json);
+                        string json = child.GetRawJsonValue();
+                        DataUser userData = JsonUtility.FromJson<DataUser>(json);
 
-                        if (userData.nameUser == user) 
+                        if (string.IsNullOrEmpty(password))
                         {
-                            Debug.Log($"Tìm thấy user {userData.id} với tên {userData.nameUser}");
-                            onCompelte?.Invoke(true);
-                            return;
+                            if (userData.nameUser == user)
+                            {
+                                Debug.Log($"Tìm thấy user {userData.id} với tên {userData.nameUser}");
+                                onComplete?.Invoke(true);
+                                return;
+                            }
+                        }
+                        else
+                        {
+
+                            if (userData.nameUser == user && userData.password == password)
+                            {
+                                Debug.Log($"Tìm thấy user {userData.id} với tên {userData.nameUser}");
+                                onComplete?.Invoke(true);
+                                return;
+                            }
                         }
                     }
                 }
-                onCompelte?.Invoke(false);
+                onComplete?.Invoke(false);
 
 
             }
             else
             {
                 Debug.Log($"{task.Exception}");
-                onCompelte?.Invoke(false);
+                onComplete?.Invoke(false);
             }
         });
 #endif
@@ -170,7 +181,7 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
         }
     }
 
-    public IEnumerator GetDataCoroutine(string name, Action<string> onCompele = null)
+    public IEnumerator GetDataCoroutine(string name, string password = "", Action<string> onComplete = null)
     {
         string url = $"{dataURL}Users.json";
         using (UnityWebRequest req = UnityWebRequest.Get(url))
@@ -182,87 +193,113 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
 
                 string toJson = ConvertFirebaseJsonToArray(req.downloadHandler.text);
                 var user = JsonUtility.FromJson<UserList>(toJson);
+
+                bool found = false;
                 foreach (DataUser userFound in user.user)
                 {
                     Debug.Log(userFound);
-                    if (userFound.nameUser == name)
-                    {
-                        Debug.Log($"Tìm thấy {userFound}, id = {userFound.id}");
-                        onCompele?.Invoke(userFound.nameUser);
 
-                        yield break;
+                    if (string.IsNullOrEmpty(password))
+                    {
+
+                        if (userFound.nameUser == name)
+                        {
+                            Debug.Log($"Tìm thấy {userFound}, id = {userFound.id}");
+                            onComplete?.Invoke(userFound.nameUser);
+                            found = true;
+                            yield break;
+                        }
+                    }
+                    else
+                    {
+                        if (userFound.nameUser == name && userFound.password == password)
+                        {
+                            Debug.Log($"Tìm thấy {userFound}, id = {userFound.id}");
+                            onComplete?.Invoke(userFound.nameUser);
+                            found = true;
+                            yield break;
+                        }
                     }
                 }
-            }
-            else Debug.LogWarning("loi get error" + req.error);
-        }
-    }
 
-
-private string ConvertFirebaseJsonToArray(string json)
-{
-    if (string.IsNullOrWhiteSpace(json) || json == "null")
-    {
-        return "{ \"user\": [] }";
-    }
-
-    json = json.Trim();
-
-    // đảm bảo bỏ {} ngoài cùng nếu có
-    if (json.StartsWith("{") && json.EndsWith("}"))
-    {
-        json = json.Substring(1, json.Length - 2);
-    }
-
-    // pattern: "KEY" : { ... }   -- lấy KEY và phần nội dung {...}
-    // RegexOptions.Singleline để '.' có thể match newline
-    string pattern = "\"?(.*?)\"?\\s*:\\s*\\{(.*?)\\}(,|\\s*$)";
-    var matches = Regex.Matches(json, pattern, RegexOptions.Singleline);
-
-    List<string> objects = new List<string>();
-
-    foreach (Match m in matches)
-    {
-        if (m.Groups.Count >= 3)
-        {
-            string key = m.Groups[1].Value.Trim().Trim('"');
-            string inner = m.Groups[2].Value.Trim(); // nội dung bên trong {...}
-
-            // Nếu inner rỗng thì dùng object trống
-            if (string.IsNullOrEmpty(inner))
-                inner = "";
-
-            // Nếu inner đã có id field (hiếm), thì không thêm nữa
-            bool hasId = Regex.IsMatch(inner, "\"id\"\\s*:");
-
-            string obj;
-            if (!hasId)
-            {
-                // chèn "id":"KEY" vào đầu object
-                if (string.IsNullOrEmpty(inner))
-                    obj = $"{{\"id\":\"{EscapeJsonString(key)}\"}}";
-                else
-                    obj = $"{{\"id\":\"{EscapeJsonString(key)}\",{inner}}}";
+                if (!found)
+                {
+                    onComplete?.Invoke(null);
+                }
             }
             else
             {
-                // nếu đã có id thì giữ nguyên (nhưng vẫn wrap lại)
-                obj = "{" + inner + "}";
+                Debug.LogWarning("loi get error" + req.error);
+                onComplete?.Invoke(null);
             }
-
-            objects.Add(obj);
         }
     }
 
-    string fixedJson = "{ \"user\": [" + string.Join(",", objects) + "] }";
-    return fixedJson;
-}
 
-// Helper nhỏ để escape các kí tự trong id nếu cần
-private string EscapeJsonString(string s)
-{
-    if (s == null) return "";
-    return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
-}
+    private string ConvertFirebaseJsonToArray(string json)
+    {
+        if (string.IsNullOrWhiteSpace(json) || json == "null")
+        {
+            return "{ \"user\": [] }";
+        }
+
+        json = json.Trim();
+
+        // đảm bảo bỏ {} ngoài cùng nếu có
+        if (json.StartsWith("{") && json.EndsWith("}"))
+        {
+            json = json.Substring(1, json.Length - 2);
+        }
+
+        // pattern: "KEY" : { ... }   -- lấy KEY và phần nội dung {...}
+        // RegexOptions.Singleline để '.' có thể match newline
+        string pattern = "\"?(.*?)\"?\\s*:\\s*\\{(.*?)\\}(,|\\s*$)";
+        var matches = Regex.Matches(json, pattern, RegexOptions.Singleline);
+
+        List<string> objects = new List<string>();
+
+        foreach (Match m in matches)
+        {
+            if (m.Groups.Count >= 3)
+            {
+                string key = m.Groups[1].Value.Trim().Trim('"');
+                string inner = m.Groups[2].Value.Trim(); // nội dung bên trong {...}
+
+                // Nếu inner rỗng thì dùng object trống
+                if (string.IsNullOrEmpty(inner))
+                    inner = "";
+
+                // Nếu inner đã có id field (hiếm), thì không thêm nữa
+                bool hasId = Regex.IsMatch(inner, "\"id\"\\s*:");
+
+                string obj;
+                if (!hasId)
+                {
+                    // chèn "id":"KEY" vào đầu object
+                    if (string.IsNullOrEmpty(inner))
+                        obj = $"{{\"id\":\"{EscapeJsonString(key)}\"}}";
+                    else
+                        obj = $"{{\"id\":\"{EscapeJsonString(key)}\",{inner}}}";
+                }
+                else
+                {
+                    // nếu đã có id thì giữ nguyên (nhưng vẫn wrap lại)
+                    obj = "{" + inner + "}";
+                }
+
+                objects.Add(obj);
+            }
+        }
+
+        string fixedJson = "{ \"user\": [" + string.Join(",", objects) + "] }";
+        return fixedJson;
+    }
+
+    // Helper nhỏ để escape các kí tự trong id nếu cần
+    private string EscapeJsonString(string s)
+    {
+        if (s == null) return "";
+        return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    }
 
 }

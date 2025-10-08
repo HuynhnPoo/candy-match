@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,8 +23,6 @@ public class Board
         {
             for (int y = 0; y < height; y++)
             {
-
-
                 board[x, y] = Random.Range(0, 5);
                 // Debug.Log("hien thi ra " + i + "  " + j);
             }
@@ -41,13 +39,14 @@ public class Board
     public Vector2 GetWorldPosition(int x, int y)
     {
         float step = this.cellsize + this.spacing;
-        return new Vector2(y * step, x * step);
+        return new Vector2(x * step, y * step);
     }
 
 
+    // ham swap candy
    public void Swap(CandyVisual[,] candies, GridManager grid, int rowA, int colA, int rowB, int colB)
     {
-        CandyVisual candyA = candies[rowA, colA];
+        CandyVisual candyA = candies[rowA, colA]; // vị trí candy 1 trong manng
         CandyVisual candyB = candies[rowB, colB];
 
         candies[rowA, colA] = candyB;
@@ -70,7 +69,7 @@ public class Board
         bool isMatched = grid.CheckMatchesForSwap(rowA, colA, rowB, colB);
         if (!isMatched)
         {
-            grid.StartCoroutine(RoutineRevertSpwan(candies, grid,colA, rowA, colB, rowB, candyA, candyB));
+            grid.StartCoroutine(RoutineRevertSpwan(candies, grid,rowA,colA, rowB, colB, candyA, candyB));
         }
 
     }
@@ -78,10 +77,11 @@ public class Board
 
     IEnumerator RoutineRevertSpwan(CandyVisual[,] candies,GridManager grid, int rowA, int colA, int rowB, int colB, CandyVisual candyA, CandyVisual candyB)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.5f); // sau 0.5 se thuc hien lai
         RevertSwap(candies,grid, rowA, colA, rowB, colB, candyA, candyB);
     }
 
+    // ham dổi nguoc lại cua candy
     void RevertSwap(CandyVisual[,] candies, GridManager grid, int rowA, int colA, int rowB, int colB, CandyVisual candyA, CandyVisual candyB)
     {
         candies[rowA, colA] = candyB;
@@ -97,8 +97,10 @@ public class Board
         candyA.GetComponent<CandyVisual>().SetPositionCandy(candyPosA);
         candyB.GetComponent<CandyVisual>().SetPositionCandy(candyPosB);
 
+
         candyA.GetComponent<CandyVisual>().SetPositionGrid(rowA, colA);
         candyB.GetComponent<CandyVisual>().SetPositionGrid(rowB, colB);
+
 
     }
 

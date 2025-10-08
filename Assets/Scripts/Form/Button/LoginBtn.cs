@@ -9,7 +9,7 @@ public class LoginBtn : ButtonBase
     {
         hander = UIManager.Instance.managerCanvas.GetComponentInChildren<FormHander>();
 
-        hander?.Login();
+        hander?.Login(); // kiem tra login
     }
 
 }

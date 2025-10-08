@@ -1,30 +1,47 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
+using System.Runtime.InteropServices;
 
-public abstract class InputBase : MonoBehaviour,ICompoment
+public abstract class InputBase : MonoBehaviour, ICompoment
 {
-
     [SerializeField] protected TMP_InputField input;
+    [SerializeField] protected bool isPassword = false; // Gán trong Inspector nếu là password
+    [SerializeField] protected string inputId; // ID duy nhất cho mỗi ô input
 
     public void LoadCompoment()
     {
         if (input == null) input = GetComponent<TMP_InputField>();
     }
+
     private void Awake()
     {
         this.LoadCompoment();
-    }
 
-    protected virtual void OnEnable()
-    {
+        // Nếu có inputId thì ép GameObject này mang tên đó,
+        // để JS có thể gọi SendMessage(inputId, ...)
+        if (!string.IsNullOrEmpty(inputId))
+        {
+            gameObject.name = inputId;
+        }
     }
 
     private void Start()
     {
-       this.AddEventListener();
-        
+        this.AddEventListener();
+
+        // Khi chọn vào InputField
+        input.onSelect.AddListener(OnInputFieldSelected);
+    }
+
+    private void OnInputFieldSelected(string currentText)
+    {
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if (DeviceDetector.IsMobilePlatformInWebGL())
+        {
+            // Gọi JS để hiện bàn phím ảo
+            FocusInputField(gameObject.name, isPassword);
+        }
+#endif
     }
 
     protected virtual void AddEventListener()
@@ -32,6 +49,36 @@ public abstract class InputBase : MonoBehaviour,ICompoment
         this.input.onEndEdit.AddListener(this.OnEndEdit);
     }
 
-   protected abstract void OnEndEdit(string text);
+    // Abstract: class con phải implement
+    protected abstract void OnEndEdit(string text);
 
+    // ========== Các hàm Unity nhận từ JS ==========
+
+    // Nhận khi user nhập text
+    public void OnKeyboardValueChanged(string val)
+    {
+        if (input == null) return;
+
+        input.text = val;
+        input.caretPosition = input.text.Length;
+        input.ForceLabelUpdate();
+    }
+
+    // Nhận khi user nhấn Enter trên bàn phím ảo
+    public void OnEndEditFromJs(string text)
+    {
+        input.text = text;
+        this.OnEndEdit(text);
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+        HideInputField();
+#endif
+    }
+
+    // ========== JS Interop ==========
+
+#if UNITY_WEBGL && !UNITY_EDITOR
+    [DllImport("__Internal")] private static extern void FocusInputField(string unityObjName, bool isPassword);
+    [DllImport("__Internal")] private static extern void HideInputField();
+#endif
 }

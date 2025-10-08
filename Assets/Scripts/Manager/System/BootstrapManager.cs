@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class BootstrapManager : MonoBehaviour
 {
     private static bool isBootstrapped = false;
@@ -63,6 +64,9 @@ public class PreprocessorDirectives
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     public static void CheckFlatForm()
     {
+
+
+
 #if UNITY_EDITOR
         // Bật log cho Debug.Log khi đang trong Editor
         Debug.unityLogger.logEnabled = true;
@@ -74,5 +78,6 @@ public class PreprocessorDirectives
 
 
     }
+
 }
 
