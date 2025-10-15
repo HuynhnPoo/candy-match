@@ -6,6 +6,7 @@ public class PlayGameBtn : ButtonBase
 {
     public override void OnClick()
     {
-        UIManager.Instance.ChangeScene(UIManager.SceneType.GAMEPLAY);
+        UIManager.Instance.CurrentScene = UIManager.SceneType.MAINMENU;
+        UIManager.Instance.ChangeScene(UIManager.SceneType.LOADING);
     }
 }

@@ -8,7 +8,9 @@ public class ExitBtn : ButtonBase
     {
         Time.timeScale = 1f;
         GameManager.Instance.IsPaused = false;
-        UIManager.Instance.ChangeScene(UIManager.SceneType.FORM);
+        UIManager.Instance.CurrentScene = UIManager.SceneType.GAMEPLAY;
+
+        UIManager.Instance.ChangeScene(UIManager.SceneType.LOADING);
     }
 
    

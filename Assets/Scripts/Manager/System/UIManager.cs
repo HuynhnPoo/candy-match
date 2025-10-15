@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class UIManager : SingletonBase<UIManager>
 {
-    [SerializeField] public GameObject loginForm { get; private set; }
-
+    public SceneType CurrentScene { get; set; } = SceneType.FORM;
 
     // game obj scene form
+    [SerializeField] public GameObject loginForm { get; private set; }
     public GameObject forgotForm { get; private set; }
     public GameObject notificationMess { get; private set; }
     public GameObject managerCanvas { get; private set; }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LogOutBtn : ButtonBase
 {
-
     public override void OnClick()
     {
         UIManager.Instance.ChangeScene(UIManager.SceneType.FORM);

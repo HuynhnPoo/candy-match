@@ -59,11 +59,11 @@ public class Board
         Vector3 candyPosB = grid.transform.position + new Vector3(posB.x, posB.y, -1);
 
 
-        candyA.GetComponent<CandyVisual>().SetPositionCandy(candyPosB);
-        candyB.GetComponent<CandyVisual>().SetPositionCandy(candyPosA);
+        candyA.SetPositionCandy(candyPosB);
+        candyA.SetPositionGrid(rowB, colB);
 
-        candyA.GetComponent<CandyVisual>().SetPositionGrid(rowB, colB);
-        candyB.GetComponent<CandyVisual>().SetPositionGrid(rowA, colA);
+        candyB.SetPositionCandy(candyPosA);
+        candyB.SetPositionGrid(rowA, colA);
 
 
         bool isMatched = grid.CheckMatchesForSwap(rowA, colA, rowB, colB);
@@ -84,8 +84,8 @@ public class Board
     // ham dổi nguoc lại cua candy
     void RevertSwap(CandyVisual[,] candies, GridManager grid, int rowA, int colA, int rowB, int colB, CandyVisual candyA, CandyVisual candyB)
     {
-        candies[rowA, colA] = candyB;
-        candies[rowB, colB] = candyA;
+        candies[rowA, colA] = candyA;
+        candies[rowB, colB] = candyB;
 
         Vector2 posA = GetWorldPosition(rowA, colA);
         Vector2 posB =GetWorldPosition(rowB, colB);
@@ -95,10 +95,9 @@ public class Board
 
 
         candyA.GetComponent<CandyVisual>().SetPositionCandy(candyPosA);
-        candyB.GetComponent<CandyVisual>().SetPositionCandy(candyPosB);
-
-
         candyA.GetComponent<CandyVisual>().SetPositionGrid(rowA, colA);
+
+        candyB.GetComponent<CandyVisual>().SetPositionCandy(candyPosB);
         candyB.GetComponent<CandyVisual>().SetPositionGrid(rowB, colB);
 
 

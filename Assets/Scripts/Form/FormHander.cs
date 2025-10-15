@@ -33,7 +33,7 @@ public class FormHander : MonoBehaviour, ICompoment
 
 
         if (!CheckIsEmptyString(nameUser, password)) return;
-        if (CheckInernet()) // kiem tra có internet có mạng để dang kí đây lên firebase
+        if (GameMechanics.CheckInernet()) // kiem tra có internet có mạng để dang kí đây lên firebase
         {
             DatabaseFirebaseManager.Instance.ReadDataOption(nameUser,"", (success) =>
             {
@@ -88,7 +88,7 @@ public class FormHander : MonoBehaviour, ICompoment
         if (!CheckIsEmptyString(nameUser, password)) return;
 
 
-        if (CheckInernet())
+        if (GameMechanics.CheckInernet())
         {
             DatabaseFirebaseManager.Instance.ReadDataOption(nameUser,password, (success) =>
             {
@@ -118,10 +118,7 @@ public class FormHander : MonoBehaviour, ICompoment
         }
     }
 
-    bool CheckInernet()
-    {
-        return Application.internetReachability != NetworkReachability.NotReachable;
-    }
+   
 
 
 

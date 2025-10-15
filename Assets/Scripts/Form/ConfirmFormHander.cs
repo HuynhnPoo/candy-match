@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
+using static UnityEngine.UIElements.UxmlAttributeDescription;
 
 public class ConfirmFormHander : MonoBehaviour, ICompoment
 {
     [SerializeField] private NameInput nameInput;
     [SerializeField] private PasswordInput passwordInput;
     [SerializeField] private ConfirmPassInput confirmPassInput;
-   
+
 
     string path;
 
@@ -24,29 +26,59 @@ public class ConfirmFormHander : MonoBehaviour, ICompoment
 
     public void ForgotPass()
     {
-        string name = nameInput.nameID;
+        UserList users = new UserList().LoadUsers();
+        string nameUser = nameInput.nameID;
         string newPassword = passwordInput.password;
         string comfirmPass = confirmPassInput.comfirmPassword;
 
-        CheckIsEmptyString(name, newPassword, comfirmPass);
+        if (!CheckIsEmptyString(nameUser, newPassword, comfirmPass)) return;
 
-        UserList users = new UserList().LoadUsers();
-
-        DataUser founderUser = users.user.Find(u => u.nameUser == name);
-        if (founderUser == null)
+        if (GameMechanics.CheckInernet())
         {
-            UIManager.Instance.ShowNotification(false, "Thực hiện không thành công đăng kí");
-            return;
+
+            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser,"", (success) =>
+            {
+
+                Debug.Log(success);
+                if (success)
+                {
+                    string newId = DatabaseFirebaseManager.Instance.DataUserFound.id;
+
+                    Debug.Log("hien thi" + newId);
+
+
+                    UIManager.Instance.ShowNotification(false, "Thực hiện thành công quên mật khảu"); // dang kí up len firebase
+                    DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = newId, nameUser = nameUser, password = newPassword });
+
+
+
+                }
+                else
+                {
+                    UIManager.Instance.ShowNotification(false, "Thực hiện không thành công quên mật khẩu");
+                    return;
+                }
+            });
         }
         else
         {
+            DataUser founderUser = users.user.Find(u => u.nameUser == nameUser);
+            if (founderUser == null)
+            {
+                UIManager.Instance.ShowNotification(false, "Thực hiện không thành công quên mật khẩu");
+                return;
+            }
+            else
+            {
 
-            founderUser.password = newPassword;
-            string idUser = founderUser.id;
-            UIManager.Instance.ShowNotification(false, "Thực hiện thành công đăng kí");
+                founderUser.password = newPassword;
+                string idUser = founderUser.id;
+                UIManager.Instance.ShowNotification(false, "Thực hiện thành công quên mật khẩu");
 
-            users.SaveData(users);
-            DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = idUser, nameUser = name, password = newPassword });
+                users.SaveData(users);
+                DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = idUser, nameUser = name, password = newPassword });
+            }
+
         }
     }
 

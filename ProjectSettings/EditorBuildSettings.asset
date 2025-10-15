@@ -12,12 +12,12 @@ EditorBuildSettings:
     path: Assets/Scenes/BOOSTTRAP.unity
     guid: ad16b4ae79f01ec4a8616f14a6670c50
   - enabled: 1
-    path: Assets/Scenes/GAMEPLAY.unity
-    guid: 5767deef577ac1a4b89952b34cc14de4
+    path: Assets/Scenes/LOADING.unity
+    guid: 184415a2a1e6f854fa40be6ebc79081d
   - enabled: 1
     path: Assets/Scenes/MAINMENU.unity
     guid: c4c30bb763980d84d82d217407804a62
   - enabled: 1
-    path: Assets/Scenes/LOADING.unity
-    guid: 184415a2a1e6f854fa40be6ebc79081d
+    path: Assets/Scenes/GAMEPLAY.unity
+    guid: 5767deef577ac1a4b89952b34cc14de4
   m_configObjects: {}

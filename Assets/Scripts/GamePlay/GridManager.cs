@@ -22,8 +22,11 @@ public class GridManager : MonoBehaviour, ICompoment
     private float spacing = 0.1f;
     public float Spacing => spacing;
 
+    private bool[,] levelLayout;
+    private Vector2Int? selectCandy = null;
     [SerializeField] private GameObject[] candyPrefabs;
-     private GameObject[,] selectVisualGrid;
+    private GameObject[,] selectVisualGrid;
+
     [SerializeField] private GameObject backgroundPrefabs;
     [SerializeField] private GameObject selectPrefabs;
     [SerializeField] private GameObject blockedCellPrefab;
@@ -31,11 +34,7 @@ public class GridManager : MonoBehaviour, ICompoment
     private CandyVisual[,] visualGrid;
 
     public Board board { private set; get; }
-    private bool[,] levelLayout;
 
-
-
-    private Vector2Int? selectCandy = null;
 
 
 
@@ -88,7 +87,6 @@ public class GridManager : MonoBehaviour, ICompoment
 
     private void OnEnable()
     {
-        GameManager.Instance.Init();
     }
     public void LoadCompoment()
     {
@@ -100,6 +98,7 @@ public class GridManager : MonoBehaviour, ICompoment
         board = new Board(this.width, this.height, this.cellSize, this.spacing);
         selectVisualGrid = new GameObject[this.width, this.height];
         visualGrid = new CandyVisual[this.width, this.height];
+        GameManager.Instance.Init();
         InstantiateGird();
 
     }
@@ -136,7 +135,7 @@ public class GridManager : MonoBehaviour, ICompoment
                 if (candyVisual == null) return;
                 visualGrid[x, y] = candyVisual;
                 selectVisualGrid[x, y] = selectObj;
-                selectVisualGrid[x,y].SetActive(false);
+                selectVisualGrid[x, y].SetActive(false);
                 candyVisual.SetPositionGrid(x, y);
                 candyVisual.SetPositionCandy(candyPos);
 
@@ -256,13 +255,13 @@ public class GridManager : MonoBehaviour, ICompoment
             }
         }
     }
-    
+
     public void SelectCandy(int x, int y)
     {
         if (selectCandy == null)
         {
             selectCandy = new Vector2Int(x, y);
-            selectVisualGrid[x,y].SetActive(true);
+            selectVisualGrid[x, y].SetActive(true);
         }
         else
         {
@@ -278,9 +277,16 @@ public class GridManager : MonoBehaviour, ICompoment
                 selectCandy = null;
 
             }
-            else
+            else if (first.x == x || first.y == y)
             {
                 selectCandy = null;
+                HidePreviousSelection();
+                return;
+            }
+            else
+            {
+                //  selectCandy = null;
+                selectCandy = new Vector2Int(x, y);
                 selectVisualGrid[x, y].SetActive(true);
             }
         }
