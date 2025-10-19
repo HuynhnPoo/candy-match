@@ -1,28 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UIElements;
 
 public class GridManager : MonoBehaviour, ICompoment
 {
-    [SerializeField] private LevelDatabase levelDatabase;
-    private LevelLayoutData currentLevelLayout;
-
 
     private int height = 4;
-    public int Height => height;
+    public int Height { set => height = value; get => height; }
 
     private int width = 4;
-    public int Width => width;
+    public int Width { set => width = value; get => width; }
 
     private int cellSize = 1;
-    public int CellSize => cellSize;
+    public int CellSize { set => cellSize = value; get => cellSize; }
     private float spacing = 0.1f;
-    public float Spacing => spacing;
+    public float Spacing { set => spacing = value; get => spacing; }
 
     private bool[,] levelLayout;
+    public bool[,] LevelLayout=> levelLayout;
     private Vector2Int? selectCandy = null;
     [SerializeField] private GameObject[] candyPrefabs;
     private GameObject[,] selectVisualGrid;
@@ -33,64 +28,19 @@ public class GridManager : MonoBehaviour, ICompoment
 
     private CandyVisual[,] visualGrid;
 
-    public Board board { private set; get; }
+    public Board board { set; get; }
+
+    private LevelManager levelManager;
 
 
-
-
-    void LoadCurrentLevel()
-    {
-        if (levelDatabase == null)
-        {
-            Debug.LogError("Level Database not assigned!");
-            CreateDefaultLayout();
-            return;
-        }
-
-        //  int currentLevel = GameManager.Instance.CurrentLevel;
-        currentLevelLayout = levelDatabase.GetLevelLayout(1);
-        Debug.Log(levelDatabase + "tdfg" + currentLevelLayout);
-
-        if (currentLevelLayout == null)
-        {
-            CreateDefaultLayout();
-            return;
-        }
-
-        width = currentLevelLayout.width;
-        height = currentLevelLayout.height;
-        Debug.Log($"hien thi rong {width} cao{height}  ");
-
-
-        levelLayout = new bool[width, height];
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                levelLayout[x, y] = currentLevelLayout.GetCell(x, y);
-            }
-        }
-
-    }
-
-    void CreateDefaultLayout()
-    {
-        levelLayout = new bool[width, height];
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                levelLayout[x, y] = true;
-            }
-        }
-    }
 
     private void OnEnable()
     {
+        levelManager = GetComponent<LevelManager>();
+        levelManager.SetGridManager(this);
     }
     public void LoadCompoment()
     {
-
     }
     // Start is called before the first frame update
     void Start()
@@ -99,147 +49,96 @@ public class GridManager : MonoBehaviour, ICompoment
         selectVisualGrid = new GameObject[this.width, this.height];
         visualGrid = new CandyVisual[this.width, this.height];
         GameManager.Instance.Init();
-        InstantiateGird();
-
+        LoadAndInstantiateGrid();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.V)) GameManager.Instance.Score = GameMechanics.AddScore(5);
-        if (Input.GetKeyDown(KeyCode.L)) ReLoadLevel();
-
-    }
-
-
-    void InstantiateGird()
-    {
-        for (int x = 0; x < width; x++)
+        if (Input.GetKeyDown(KeyCode.L))
         {
-            for (int y = 0; y < height; y++)
-            {
-                Vector2 pos2D = board.GetWorldPosition(x, y);
-                Vector3 gird = this.transform.position + new Vector3(pos2D.x, pos2D.y, 0);
-                GameObject obj = Instantiate(backgroundPrefabs, gird, Quaternion.identity, this.transform);
-
-
-                int candy = board.GetCandy(x, y);
-                Vector3 candyPos = this.transform.position + new Vector3(pos2D.x, pos2D.y, -1);
-                Vector3 candyPosStart = this.transform.position + new Vector3(pos2D.x, this.height * (this.cellSize + this.spacing), -1);
-                GameObject newCandy = Instantiate(candyPrefabs[candy], candyPosStart, Quaternion.identity, this.transform);
-                //Debug.Log("debug gia tra cua can laf gif "+candy);
-
-                GameObject selectObj = Instantiate(selectPrefabs, gird, Quaternion.identity, this.transform);
-
-                CandyVisual candyVisual = newCandy.GetComponent<CandyVisual>();
-                if (candyVisual == null) return;
-                visualGrid[x, y] = candyVisual;
-                selectVisualGrid[x, y] = selectObj;
-                selectVisualGrid[x, y].SetActive(false);
-                candyVisual.SetPositionGrid(x, y);
-                candyVisual.SetPositionCandy(candyPos);
-
-                candyVisual.SetGridManager(this);
-
-            }
+            this.cellSize =(int)0.5f;
+            this.spacing =0.5f;
+            levelManager.LoadNewLevelData();
+            LoadAndInstantiateGrid();
         }
     }
 
-    void InstantiateGird2()
+    void ClearGrid()
     {
-        Debug.Log("🎮 Starting InstantiateGird...");
-
-        for (int x = 0; x < width; x++)
-        {
-            for (int y = 0; y < height; y++)
-            {
-                Vector2 pos2D = board.GetWorldPosition(x, y);
-                Vector3 gridPos = this.transform.position + new Vector3(pos2D.x, pos2D.y, 0);
-
-                // ✅ KIỂM TRA LAYOUT - ĐÂY LÀ PHẦN QUAN TRỌNG!
-                if (levelLayout != null && levelLayout[x, y] == true)
-                {
-                    // ✅ Ô này ĐƯỢC PHÉP spawn candy
-
-                    // Tạo background
-                    GameObject obj = Instantiate(backgroundPrefabs, gridPos, Quaternion.identity, this.transform);
-
-                    // Apply màu nếu có
-                    if (currentLevelLayout != null)
-                    {
-                        SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
-                        if (sr != null)
-                        {
-                            sr.color = currentLevelLayout.levelColor;
-                        }
-                    }
-
-                    // Tạo candy
-                    int candy = board.GetCandy(x, y);
-                    Vector3 candyPos = this.transform.position + new Vector3(pos2D.x, pos2D.y, -1);
-                    Vector3 candyPosStart = this.transform.position + new Vector3(pos2D.x, this.height * (this.cellSize + this.spacing), -1);
-                    GameObject newCandy = Instantiate(candyPrefabs[candy], candyPosStart, Quaternion.identity, this.transform);
-
-                    CandyVisual candyVisual = newCandy.GetComponent<CandyVisual>();
-                    if (candyVisual == null)
-                    {
-                        Debug.LogError($"❌ CandyVisual component not found at ({x}, {y})!");
-                        continue;
-                    }
-
-                    visualGrid[x, y] = candyVisual;
-                    candyVisual.SetPositionGrid(x, y);
-                    candyVisual.SetPositionCandy(candyPos);
-                    candyVisual.SetGridManager(this);
-
-                    Debug.Log($"✅ Spawned candy at ({x}, {y})");
-                }
-                else
-                {
-                    // 🚫 Ô này BỊ KHÓA - KHÔNG spawn candy
-
-                    // Tạo ô bị khóa (nếu có prefab)
-                    if (blockedCellPrefab != null)
-                    {
-                        GameObject blockedCell = Instantiate(blockedCellPrefab, gridPos, Quaternion.identity, this.transform);
-                        Debug.Log($"🚫 Created blocked cell at ({x}, {y})");
-                    }
-                    else
-                    {
-                        Debug.Log($"🚫 Skipped cell at ({x}, {y}) - No blocked prefab");
-                    }
-
-                    // Set visualGrid = null cho ô bị khóa
-                    visualGrid[x, y] = null;
-                }
-            }
-        }
-
-        Debug.Log("✅ InstantiateGird completed!");
+        for (int i = transform.childCount - 1; i >= 0; i--)
+            Destroy(transform.GetChild(i).gameObject);
     }
 
-    public void ReLoadLevel()
+    public void SetLevelLayout(bool[,] layout)
+    {
+        this.levelLayout = layout;
+    }
+    public void LoadAndInstantiateGrid()
     {
         ClearGrid();
 
-        LoadCurrentLevel();
-        board = new Board(this.width, this.height, this.cellSize, this.spacing);
-        visualGrid = new CandyVisual[this.width, this.height];
+        board = new Board(Width, Height, CellSize, Spacing);
+        visualGrid = new CandyVisual[Width, Height];
+        selectVisualGrid = new GameObject[Width, Height];
 
-        InstantiateGird2();
-    }
-
-    // xoa tat car cac con 
-    void ClearGrid()
-    {
-        for (int i = transform.childCount - 1; i > 0; i--)
+        if (levelLayout == null)
         {
-            Destroy(transform.GetChild(i).gameObject);
+            Debug.LogWarning("⚠️ Level layout is null, creating default layout.");
+            levelLayout = new bool[Width, Height];
+            for (int x = 0; x < Width; x++)
+                for (int y = 0; y < Height; y++)
+                    levelLayout[x, y] = true;
         }
 
-        //visualGrid = null;
-        selectCandy = null;
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                Vector2 pos2D = board.GetWorldPosition(x, y);
+                Vector3 gridPos = transform.position + new Vector3(pos2D.x, pos2D.y, 0);
+
+                if (levelLayout[x, y])
+                {
+                    // Spawn background
+                    GameObject bg = Instantiate(backgroundPrefabs, gridPos, Quaternion.identity, transform);
+                    // bg.transform.localScale = Vector2.one * 0.5f;
+
+                    // Spawn candy
+                    int candy = board.GetCandy(x, y);
+                    Vector3 candyPos = transform.position + new Vector3(pos2D.x, pos2D.y, -1);
+                    GameObject newCandy = Instantiate(candyPrefabs[candy], candyPos, Quaternion.identity, transform);
+
+                    CandyVisual candyVisual = newCandy.GetComponent<CandyVisual>();
+                    visualGrid[x, y] = candyVisual;
+
+                    // Spawn select visual
+                    GameObject selectObj = Instantiate(selectPrefabs, gridPos, Quaternion.identity, transform);
+                    selectObj.SetActive(false);
+                    selectVisualGrid[x, y] = selectObj;
+
+                    candyVisual.SetGridManager(this);
+                    candyVisual.SetPositionGrid(x, y);
+                    candyVisual.SetPositionCandy(candyPos);
+                    candyVisual.SetScale(0.5f);
+                }
+                else
+                {
+                    // Spawn blocked cell
+                    if (blockedCellPrefab != null)
+                    {
+                        GameObject blocked = Instantiate(blockedCellPrefab, gridPos, Quaternion.identity,this.transform);
+                        Debug.Log(blocked);
+                       // blocked.transform.localScale = Vector2.one * 0.5f;
+                    }
+                }
+            }
+        }
+
+        Debug.Log("✅ Grid instantiated successfully!");
     }
+    // xoa tat car cac con 
 
     void HidePreviousSelection()
     {
@@ -258,6 +157,7 @@ public class GridManager : MonoBehaviour, ICompoment
 
     public void SelectCandy(int x, int y)
     {
+        Debug.Log("hient thi" + selectVisualGrid[x, y]);
         if (selectCandy == null)
         {
             selectCandy = new Vector2Int(x, y);
@@ -292,6 +192,16 @@ public class GridManager : MonoBehaviour, ICompoment
         }
     }
 
+    public void SwipeCandy(int row, int col, Vector2Int direction)
+    {
+        int newRow = row + direction.x;
+        int newCol = col + direction.y;
+
+        board.Swap(visualGrid, this, row, col, newRow, newCol);
+        HidePreviousSelection();
+        selectCandy = null;
+
+    }
     public bool CheckMatchesForSwap(int rowA, int colA, int rowB, int colB)
     {
         HashSet<CandyVisual> matchesA = MatchCandy.FindAllMacth(visualGrid, width, height, rowA, colA);
@@ -308,7 +218,4 @@ public class GridManager : MonoBehaviour, ICompoment
         }
         return false;
     }
-
-
-
 }

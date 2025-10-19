@@ -5,6 +5,7 @@ using UnityEngine;
 
 public static class MatchCandy
 {
+    // hàm xoa các  object
     public static void DestroyAnfndRefill( CandyVisual[,] candyVisuals,GridManager grid,List<CandyVisual> candies, GameObject[] candyPrefabs)
     {
         foreach (CandyVisual candy in candies)
@@ -12,20 +13,21 @@ public static class MatchCandy
             int row = candy.Row;
             int col = candy.Colum;
 
-            // clear trong grid
-            candyVisuals[row, col] = null;
-
-            // huỷ object
-           Object.Destroy(candy.gameObject);
+            candyVisuals[row, col] = null;  // clear trong grid 
 
 
-            grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid,candyPrefabs));
+            Object.Destroy(candy.gameObject);// xóa object
+
+
+            grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid,candyPrefabs)); //sau khi xoa sẽ thực hiện tạo và lấy đày
         }
     }
+
+   
     private static IEnumerator RefillAffterDelay(CandyVisual[,] candies,GridManager grid,GameObject[] candyPrefabs)
     {
         yield return new WaitForSeconds(0.5f);
-        MatchCandy.CollapseColumn(candies, grid.board,grid.transform,grid.Height,grid.Width);
+        MatchCandy.CollapseColumn(candies, grid);
         MatchCandy.Refill(grid, candies,candyPrefabs);
         yield return new WaitForSeconds(0.3f);
         MatchCandy.MatchAllCandy(candies,grid,candyPrefabs);
@@ -73,9 +75,9 @@ public static class MatchCandy
         if (candy == null) return matchCandies;
         List<CandyVisual> horizontal = new List<CandyVisual>() { candy };
 
-        for (int c = col - 1; c >= 0; c--) // duyet tu duoi len
+        for (int c = col - 1; c >= 0; c--) // duyet tung cột từ phải sang trái
         {
-
+            //kiểm tra cung kiểu sẽ thưc hiện thêm vào
             if (candies[row, c] != null && candy.TypeCandy == candies[row, c].TypeCandy)
             {
 
@@ -85,9 +87,9 @@ public static class MatchCandy
             else break;
         }
 
-        for (int c = col + 1; c < cols; c++) // duyệt từ tren xuông
+        for (int c = col + 1; c < cols; c++) // duyệt từ cột từ trái qua phải
         {
-
+            //kiểm tra cung kiểu sẽ thưc hiện thêm vào
             if (candies[row, c] != null && candy.TypeCandy == candies[row, c].TypeCandy)
 
             {
@@ -95,13 +97,11 @@ public static class MatchCandy
             }
             else break;
         }
-        if (horizontal.Count >= 3)
+        if (horizontal.Count >= 3) // số lương thêm phải lơn hơn 3 mỡi thực hiện hợp nhất với các obj cung kiểu
 
             matchCandies.UnionWith(horizontal);
 
-        Debug.Log(matchCandies.Count);
         return matchCandies;
-
 
     }
     private static HashSet<CandyVisual> FindVerticalMatch(CandyVisual[,] candies, int row, int col, int rows)
@@ -130,18 +130,27 @@ public static class MatchCandy
             }
             else break;
         }
+
+        // số lương thêm phải lơn hơn 3 mỡi thực hiện hợp nhất với các obj cung kiểu
         if (vertical.Count >= 3) matchCandies.UnionWith(vertical);
         return matchCandies;
     }
+   
 
-    public static void CollapseColumn(CandyVisual[,] candies, Board board, Transform posCandies, int width, int height)
+    //dồn candy lại xuông
+    public static void CollapseColumn(CandyVisual[,] candies, GridManager grid)
     {
         // Duyệt từng hàng (row = y)
-        for (int x = 0; x < width; x++)
+        for (int x = 0; x < grid.Width; x++)
         {
             int writeRow = 0;
-            for (int y = 0; y < height; y++)
+            for (int y = 0; y < grid.Height; y++)
             {
+                while (writeRow <y && grid.LevelLayout !=null && !grid.LevelLayout[x,writeRow] )
+                {
+                    writeRow ++;
+                }
+                if (grid.LevelLayout != null && !grid.LevelLayout[x, y]) continue;
                 if (candies[x, y] != null)
                 {
                     if (y != writeRow)
@@ -149,8 +158,8 @@ public static class MatchCandy
                         CandyVisual candy = candies[x, y];
                         candies[x, writeRow] = candy;
                         candies[x, y] = null; // Ô cũ (ở trên) bây giờ là ô trống
-                        Vector2 pos2D = board.GetWorldPosition(x, writeRow);
-                        Vector3 targetPos = posCandies.position + new Vector3(pos2D.x, pos2D.y, -1);
+                        Vector2 pos2D = grid.board.GetWorldPosition(x, writeRow);
+                        Vector3 targetPos = grid.transform.position + new Vector3(pos2D.x, pos2D.y, -1);
 
                         candy.SetPositionGrid(x, writeRow);
                         // Kêu gọi kẹo di chuyển xuống vị trí mới
@@ -163,7 +172,7 @@ public static class MatchCandy
         }
     }
 
-
+    // tạo lại các candy dể lấp đầy grid bằng candy
     public static void Refill(GridManager grid,CandyVisual[,] candies,GameObject[] candyPrefabs)
     {
         for (int x = 0; x < grid.Width; x++)
@@ -171,15 +180,18 @@ public static class MatchCandy
             // Duyệt TỪ TRÊN XUỐNG DƯỚI (y)
             for (int y = grid.Height - 1; y >= 0; y--)
             {
+                if (grid.LevelLayout!=null && !grid.LevelLayout[x,y]) continue;
                 if (candies[x, y] != null) continue; // Bỏ qua nếu đã có kẹo
                 Vector2 pos2D = grid.board.GetWorldPosition(x, y);
-                int candyTypeID = grid.board.GetCandy(x, y);
+                int candyTypeID = Random.Range(0,candyPrefabs.Length);
                 Vector3 targetPos = grid.transform.position + new Vector3(pos2D.x, pos2D.y, -1);
                 Vector3 startPos = grid.transform.position + new Vector3(pos2D.x, grid.Height * (grid.CellSize + grid.Spacing), -1);
                 GameObject newCandy = Object.Instantiate(candyPrefabs[candyTypeID], startPos, Quaternion.identity, grid.transform);
                 CandyVisual candyVisual = newCandy.GetComponent<CandyVisual>();
                 if (candyVisual == null) return;
                 candies[x, y] = candyVisual;
+
+                candyVisual.SetScale(0.5f);
                 candyVisual.SetPositionGrid(x, y);
                 candyVisual.SetPositionCandy(targetPos);
                 candyVisual.SetGridManager(grid);

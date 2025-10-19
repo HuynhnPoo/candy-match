@@ -39,7 +39,7 @@ public class GameManager : SingletonBase<GameManager>
 
     public void SaveScore()
     {
-       
+
     }
 
 }

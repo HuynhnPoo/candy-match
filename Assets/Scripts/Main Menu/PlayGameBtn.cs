@@ -9,4 +9,5 @@ public class PlayGameBtn : ButtonBase
         UIManager.Instance.CurrentScene = UIManager.SceneType.MAINMENU;
         UIManager.Instance.ChangeScene(UIManager.SceneType.LOADING);
     }
+
 }

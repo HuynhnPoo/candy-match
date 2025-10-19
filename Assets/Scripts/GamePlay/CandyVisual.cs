@@ -19,19 +19,25 @@ public class CandyVisual : MonoBehaviour
 
     private CandyTypeList type;
 
+    Vector3 startPos;
+    Vector3 endPos;
+
+    int swipeDistance = 20;
+
     public CandyTypeList TypeCandy
     {
         get => type;
         set => type = value;
     }
-   public void SetGridManager(GridManager grid) 
+    public void SetGridManager(GridManager grid)
     {
         this.grid = grid;
     }
 
-    void SetScale()
+    public void SetScale(float size)
     {
-        this.transform.GetChild(0).localScale = new Vector2(0.5f, 0.5f);
+        //Debug.Log(thuwj)
+        this.transform.GetChild(0).localScale = new Vector2(size, size);
     }
 
     public void SetPositionCandy(Vector3 pos)
@@ -47,7 +53,7 @@ public class CandyVisual : MonoBehaviour
 
     private void OnEnable()
     {
-         CandyName.LoadName(this.transform.name.Replace("(Clone)",""),this);
+        CandyName.LoadName(this.transform.name.Replace("(Clone)", ""), this);
 
         //Debug.Log(StringManager.pathDataUser);
     }
@@ -55,15 +61,15 @@ public class CandyVisual : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        SetScale();
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (this.transform.position !=targetPos)
+        if (this.transform.position != targetPos)
         {
-           transform.position = Vector3.Lerp(this.transform.position,targetPos,this.speed*Time.deltaTime);
+            transform.position = Vector3.Lerp(this.transform.position, targetPos, this.speed * Time.deltaTime);
             if (Vector3.Distance(this.transform.position, targetPos) < 0.01f)
             {
                 this.transform.position = targetPos;
@@ -71,14 +77,56 @@ public class CandyVisual : MonoBehaviour
             }
         }
 
-
     }
 
     private void OnMouseDown()
     {
-        this.grid.SelectCandy(this.row,this.colum);
+
+        startPos = Input.mousePosition;
 
     }
 
-  
+    private void OnMouseUp()
+    {
+        endPos = Input.mousePosition;
+        Vector2 swipe = endPos - startPos;
+        if (swipe.magnitude < swipeDistance)
+        {
+            this.grid.SelectCandy(this.row, this.colum);
+
+        }
+        else
+        {
+            DetectSwipeDirection(swipe);
+        }
+    }
+
+    void DetectSwipeDirection(Vector2 swipe)
+    {
+        swipe.Normalize();
+        if (Mathf.Abs(swipe.x) > Mathf.Abs(swipe.y))
+        {
+            if (swipe.x > 0)
+            {
+                grid.SwipeCandy(row, colum, Vector2Int.right);
+            }
+            else
+            {
+                grid.SwipeCandy(row, colum, Vector2Int.left);
+            }
+        }
+        else
+        {
+            if (swipe.y > 0)
+            {
+                grid.SwipeCandy(row, colum, Vector2Int.left);
+            }
+            else
+            {
+                grid.SwipeCandy(row, colum, Vector2Int.left);
+            }
+        }
+    }
+
+
 }
