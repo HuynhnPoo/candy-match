@@ -119,11 +119,11 @@ public class CandyVisual : MonoBehaviour
         {
             if (swipe.y > 0)
             {
-                grid.SwipeCandy(row, colum, Vector2Int.left);
+                grid.SwipeCandy(row, colum, Vector2Int.up);
             }
             else
             {
-                grid.SwipeCandy(row, colum, Vector2Int.left);
+                grid.SwipeCandy(row, colum, Vector2Int.down);
             }
         }
     }

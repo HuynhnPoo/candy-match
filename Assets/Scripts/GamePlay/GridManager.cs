@@ -13,8 +13,13 @@ public class GridManager : MonoBehaviour, ICompoment
 
     private int cellSize = 1;
     public int CellSize { set => cellSize = value; get => cellSize; }
+
+    private int moveStep = 25;
+
     private float spacing = 0.1f;
     public float Spacing { set => spacing = value; get => spacing; }
+    private float localSize=0.5f;
+    public  float LocalSize => localSize;   
 
     private bool[,] levelLayout;
     public bool[,] LevelLayout=> levelLayout;
@@ -31,6 +36,7 @@ public class GridManager : MonoBehaviour, ICompoment
     public Board board { set; get; }
 
     private LevelManager levelManager;
+
 
 
 
@@ -58,9 +64,17 @@ public class GridManager : MonoBehaviour, ICompoment
         if (Input.GetKeyDown(KeyCode.V)) GameManager.Instance.Score = GameMechanics.AddScore(5);
         if (Input.GetKeyDown(KeyCode.L))
         {
-            this.cellSize =(int)0.5f;
-            this.spacing =0.5f;
-            levelManager.LoadNewLevelData();
+            this.cellSize =(int)0.4f;
+            this.spacing =0.6f;
+            this.localSize = 0.3f;
+            levelManager.LoadNewLevelData(1);
+            LoadAndInstantiateGrid();
+        } if (Input.GetKeyDown(KeyCode.M))
+        {
+            this.cellSize =(int)0.4f;
+            this.spacing =0.6f;
+            this.localSize = 0.3f;
+            levelManager.LoadNewLevelData(2);
             LoadAndInstantiateGrid();
         }
     }
@@ -103,7 +117,7 @@ public class GridManager : MonoBehaviour, ICompoment
                 {
                     // Spawn background
                     GameObject bg = Instantiate(backgroundPrefabs, gridPos, Quaternion.identity, transform);
-                    // bg.transform.localScale = Vector2.one * 0.5f;
+                     bg.transform.localScale = new Vector3 ((localSize+0.4f)-0.2f,(localSize+0.4f)-0.2f,1);
 
                     // Spawn candy
                     int candy = board.GetCandy(x, y);
@@ -121,7 +135,7 @@ public class GridManager : MonoBehaviour, ICompoment
                     candyVisual.SetGridManager(this);
                     candyVisual.SetPositionGrid(x, y);
                     candyVisual.SetPositionCandy(candyPos);
-                    candyVisual.SetScale(0.5f);
+                    candyVisual.SetScale(localSize);
                 }
                 else
                 {
@@ -129,8 +143,7 @@ public class GridManager : MonoBehaviour, ICompoment
                     if (blockedCellPrefab != null)
                     {
                         GameObject blocked = Instantiate(blockedCellPrefab, gridPos, Quaternion.identity,this.transform);
-                        Debug.Log(blocked);
-                       // blocked.transform.localScale = Vector2.one * 0.5f;
+                        blocked.transform.localScale = new Vector3((localSize + 0.4f) - 0.2f, (localSize + 0.4f) - 0.2f, 1);
                     }
                 }
             }
@@ -175,7 +188,7 @@ public class GridManager : MonoBehaviour, ICompoment
                 board.Swap(visualGrid, this, first.x, first.y, x, y);
 
                 selectCandy = null;
-
+                GameManager.Instance.MoveStep--;
             }
             else if (first.x == x || first.y == y)
             {
@@ -200,6 +213,8 @@ public class GridManager : MonoBehaviour, ICompoment
         board.Swap(visualGrid, this, row, col, newRow, newCol);
         HidePreviousSelection();
         selectCandy = null;
+
+        GameManager.Instance.MoveStep--;
 
     }
     public bool CheckMatchesForSwap(int rowA, int colA, int rowB, int colB)

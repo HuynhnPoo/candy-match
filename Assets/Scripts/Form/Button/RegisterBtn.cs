@@ -9,8 +9,6 @@ public class RegisterBtn : ButtonBase
     {
         hander = UIManager.Instance.managerCanvas.GetComponentInChildren<FormHander>();
 
-        Debug.Log("hien thi cos hander" + hander.name);
-
         hander.Register();
     }
 }

@@ -1,8 +1,10 @@
 ﻿using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+#if UNITY_WEBGL && !UNITY_EDITOR
 using System.Runtime.InteropServices;
-
-public abstract class InputBase : MonoBehaviour, ICompoment
+#endif
+public abstract class InputBase : MonoBehaviour, ICompoment,IPointerClickHandler
 {
     [SerializeField] protected TMP_InputField input;
     [SerializeField] protected bool isPassword = false; // Gán trong Inspector nếu là password
@@ -30,10 +32,10 @@ public abstract class InputBase : MonoBehaviour, ICompoment
         this.AddEventListener();
 
         // Khi chọn vào InputField
-        input.onSelect.AddListener(OnInputFieldSelected);
+       // input.onSelect.AddListener(OnInputFieldSelected);
     }
 
-    private void OnInputFieldSelected(string currentText)
+   /* private void OnInputFieldSelected(string currentText)
     {
 #if UNITY_WEBGL && !UNITY_EDITOR
         if (DeviceDetector.IsMobilePlatformInWebGL())
@@ -42,7 +44,7 @@ public abstract class InputBase : MonoBehaviour, ICompoment
             FocusInputField(gameObject.name, isPassword);
         }
 #endif
-    }
+    }*/
 
     protected virtual void AddEventListener()
     {
@@ -75,10 +77,24 @@ public abstract class InputBase : MonoBehaviour, ICompoment
 #endif
     }
 
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (input != null && !input.isFocused) input.Select();
+#if UNITY_WEBGL && !UNITY_EDITOR
+        if (DeviceDetector.IsMobilePlatformInWebGL())
+        {
+            // BỎ QUA onSelect, GỌI THẲNG JS Ở ĐÂY
+            FocusInputField(gameObject.name, isPassword);
+        }
+#endif
+
+    }
+
     // ========== JS Interop ==========
 
 #if UNITY_WEBGL && !UNITY_EDITOR
     [DllImport("__Internal")] private static extern void FocusInputField(string unityObjName, bool isPassword);
     [DllImport("__Internal")] private static extern void HideInputField();
 #endif
+
 }

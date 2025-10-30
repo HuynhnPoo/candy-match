@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.GlobalIllumination;
 
 public class GameManager : SingletonBase<GameManager>
 {
@@ -12,8 +12,14 @@ public class GameManager : SingletonBase<GameManager>
     private static int highScore = 0;
     public int Score { get => score; set => score = value; }
 
-    public string Notification { get; set; } = "fsfs";
+    public string NameUserLogin { set; get; } = "";
 
+    public string Notification { get; set; } = "null";
+
+    private  static int moveStep = 25;
+    public int MoveStep { set => moveStep = value; get => moveStep; }
+
+ 
     public void Init()
     {
         GameMechanics.Init();

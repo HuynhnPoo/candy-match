@@ -16,7 +16,7 @@ public class LevelManager : MonoBehaviour
     }
 
     // Gọi để nạp layout mới
-    public void LoadNewLevelData()
+    public void LoadNewLevelData(int curentLevel)
     {
         if (levelDatabase == null)
         {
@@ -25,8 +25,7 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
-        // Giả sử level hiện tại là 1 (bạn có thể thay bằng GameManager.Instance.CurrentLevel)
-        currentLevelLayout = levelDatabase.GetLevelLayout(1);
+        currentLevelLayout = levelDatabase.GetLevelLayout(curentLevel); // load current kế tiep là gì
         if (currentLevelLayout == null)
         {
             Debug.LogWarning("⚠️ Level layout not found, using default layout.");

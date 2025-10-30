@@ -19,16 +19,16 @@ public static class MatchCandy
             Object.Destroy(candy.gameObject);// xóa object
 
 
-            grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid,candyPrefabs)); //sau khi xoa sẽ thực hiện tạo và lấy đày
+            grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid,candyPrefabs,grid.LocalSize)); //sau khi xoa sẽ thực hiện tạo và lấy đày
         }
     }
 
    
-    private static IEnumerator RefillAffterDelay(CandyVisual[,] candies,GridManager grid,GameObject[] candyPrefabs)
+    private static IEnumerator RefillAffterDelay(CandyVisual[,] candies,GridManager grid,GameObject[] candyPrefabs,float localSize)
     {
         yield return new WaitForSeconds(0.5f);
         MatchCandy.CollapseColumn(candies, grid);
-        MatchCandy.Refill(grid, candies,candyPrefabs);
+        MatchCandy.Refill(grid, candies,candyPrefabs,localSize);
         yield return new WaitForSeconds(0.3f);
         MatchCandy.MatchAllCandy(candies,grid,candyPrefabs);
 
@@ -173,7 +173,7 @@ public static class MatchCandy
     }
 
     // tạo lại các candy dể lấp đầy grid bằng candy
-    public static void Refill(GridManager grid,CandyVisual[,] candies,GameObject[] candyPrefabs)
+    public static void Refill(GridManager grid,CandyVisual[,] candies,GameObject[] candyPrefabs,float localSize)
     {
         for (int x = 0; x < grid.Width; x++)
         {
@@ -191,7 +191,7 @@ public static class MatchCandy
                 if (candyVisual == null) return;
                 candies[x, y] = candyVisual;
 
-                candyVisual.SetScale(0.5f);
+                candyVisual.SetScale(localSize);
                 candyVisual.SetPositionGrid(x, y);
                 candyVisual.SetPositionCandy(targetPos);
                 candyVisual.SetGridManager(grid);

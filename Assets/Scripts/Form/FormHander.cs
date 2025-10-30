@@ -94,6 +94,7 @@ public class FormHander : MonoBehaviour, ICompoment
             {
                 if (success)
                 {
+                    GameManager.Instance.NameUserLogin = nameUser; // gawn ten nhân vật cho NameUserLogin để quan lí
                     UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập");
                 }
                 else
@@ -108,12 +109,12 @@ public class FormHander : MonoBehaviour, ICompoment
 
             if (foundUser != null)
             {
+                GameManager.Instance.NameUserLogin = nameUser; // gawn ten nhân vật cho NameUserLogin để quan lí
                 UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập offline");
-
             }
             else
             {
-                UIManager.Instance.ShowNotification(false, "Thực hiện thành công đăng nhập offline");
+                UIManager.Instance.ShowNotification(false, "Thực hiện không thành công đăng nhập offline");
             }
         }
     }

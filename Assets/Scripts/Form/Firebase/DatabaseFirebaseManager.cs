@@ -1,4 +1,4 @@
-﻿#if !UNITY_WEBGL
+﻿#if !UNITY_WEBGL //  khong phải webgl thi sẽ udng duong thư vien này
 using Firebase;
 using Firebase.Extensions;
 using Firebase.Database;
@@ -17,7 +17,7 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
 #if !UNITY_WEBGL
     private DatabaseReference dataRef; // biên firebase danh cho pc và mobie
 #endif
-    private string dataURL = "https://saga-candy-default-rtdb.asia-southeast1.firebasedatabase.app/";
+    private string dataURL = "https://saga-candy-default-rtdb.asia-southeast1.firebasedatabase.app/"; // link api cho web
      
     public   DataUser DataUserFound { get;  set; } = null;
 
@@ -72,8 +72,7 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
         UserList user = new UserList().LoadUsers(); // load dữ liệu ở trong json
         foreach (var item in user.user)
         {
-            WriteDataOption(item);
-
+            WriteDataOption(item); //viêt các dữ liệu đọc được đưa lên firebase
         }
     }
 
@@ -206,9 +205,7 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
                         if (userFound.nameUser == name)
                         {
                             DataUserFound = userFound;
-                            Debug.Log(DataUserFound.nameUser);
                             onComplete?.Invoke(userFound.nameUser);
-                            Debug.Log(DataUserFound);
                             found = true;
                             yield break;
                         }
