@@ -57,8 +57,9 @@ public class UIManager : SingletonBase<UIManager>
     {
         FORM = 0,
         MAINMENU,
-        GAMEPLAY,
-        LOADING
+        LOADING,
+        LEVELMENU,
+        GAMEPLAY
     }
 
     public void ShowNotification(bool isLogin, string notification)

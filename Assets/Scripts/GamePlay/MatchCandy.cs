@@ -97,9 +97,12 @@ public static class MatchCandy
             }
             else break;
         }
-        if (horizontal.Count >= 3) // số lương thêm phải lơn hơn 3 mỡi thực hiện hợp nhất với các obj cung kiểu
-
+        if (horizontal.Count >= 3)// số lương thêm phải lơn hơn 3 mỡi thực hiện hợp nhất với các obj cung kiểu
+        {
             matchCandies.UnionWith(horizontal);
+            GameMechanics.AddScore(horizontal.Count);
+        }
+
 
         return matchCandies;
 
@@ -132,7 +135,11 @@ public static class MatchCandy
         }
 
         // số lương thêm phải lơn hơn 3 mỡi thực hiện hợp nhất với các obj cung kiểu
-        if (vertical.Count >= 3) matchCandies.UnionWith(vertical);
+        if (vertical.Count >= 3) 
+        {
+            matchCandies.UnionWith(vertical);
+            GameMechanics.AddScore(vertical.Count);
+        }
         return matchCandies;
     }
    

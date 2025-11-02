@@ -49,9 +49,6 @@ public class ConfirmFormHander : MonoBehaviour, ICompoment
 
                     UIManager.Instance.ShowNotification(false, "Thực hiện thành công quên mật khảu"); // dang kí up len firebase
                     DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = newId, nameUser = nameUser, password = newPassword });
-
-
-
                 }
                 else
                 {

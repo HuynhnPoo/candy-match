@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -9,19 +10,31 @@ public static class GameMechanics
 
     private static float time = 30;
     private static bool timeUp = false;
-
+    static float scoreMultiles = 0.1f;
+    static int bonusRewads = 5;
     public static void Init()
     {
         score = 0;
         time = 30;
         timeUp = false;
     }
-    
-    public static int AddScore(int amout)
+
+    public static void AddScore(int amout)
     {
-        score += amout; // thêm điểm
+        if (amout == 3)
+        {
+            score += 5; // thêm điểm
+        }
+        else if (amout >= 4 && amout <= 6)
+        {
+            score += 8; // thêm điểm
+        }
+        else if (amout >= 7 && amout <= 8)
+        {
+            score += 10;
+        }
         Debug.Log("diemrd cua game là " + score);
-        return score;
+        GameManager.Instance.Score = score;
     }
 
 
@@ -30,7 +43,7 @@ public static class GameMechanics
         if (!timeUp)
         {
             time -= Time.deltaTime;
-         //   Debug.Log("hien thi ra "+ time);
+            //   Debug.Log("hien thi ra "+ time);
             if (time <= 0)
             {
                 timeUp = true;
@@ -43,9 +56,15 @@ public static class GameMechanics
         return time;
     }
 
-public static bool CheckInernet()
+    public static bool CheckInernet()
     {
         return Application.internetReachability != NetworkReachability.NotReachable;
+    }
+
+    public static void CalculateMoney(int score, int time,int stepMove)
+    {
+        int coinEarned = (score*(int)scoreMultiles)+(time*bonusRewads)+(stepMove*bonusRewads);
+        GameManager.Instance.Coin= coinEarned;
     }
     public static string ConvertFirebaseJsonToArray(string json)
     {
@@ -112,5 +131,4 @@ public static bool CheckInernet()
         if (s == null) return "";
         return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
     }
-
 }

@@ -27,7 +27,7 @@ public class LoadSld : SliderBase
 
     IEnumerator LoadingSceneCorutine()
     {
-        if (UIManager.Instance.CurrentScene == UIManager.SceneType.MAINMENU)
+        if (UIManager.Instance.CurrentScene == UIManager.SceneType.LEVELMENU)
         {
             operation = UIManager.Instance.ChangeScene(UIManager.SceneType.GAMEPLAY);
         }
