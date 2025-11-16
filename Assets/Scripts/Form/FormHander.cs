@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class FormHander : MonoBehaviour, ICompoment
 {
@@ -35,7 +30,7 @@ public class FormHander : MonoBehaviour, ICompoment
         if (!CheckIsEmptyString(nameUser, password)) return;
         if (GameMechanics.CheckInernet()) // kiem tra có internet có mạng để dang kí đây lên firebase
         {
-            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser,"", (success) =>
+            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser, "", (success) =>
             {
                 if (success)
                 {
@@ -48,7 +43,7 @@ public class FormHander : MonoBehaviour, ICompoment
                     DatabaseFirebaseManager.Instance.WriteDataOption(new DataUser { id = newId, nameUser = nameUser, password = password });
 
                     //dang kí ghi vào json
-                    users.user.Add(new DataUser { id = newId, nameUser = nameUser, password = password });
+                    users.user.Add(new DataUser { id = newId, nameUser = nameUser, password = password, z_coin = 100, z_highScore = 0 });
 
                     users.SaveData(users);
                 }
@@ -66,7 +61,7 @@ public class FormHander : MonoBehaviour, ICompoment
             else
             {
                 string newId = users.GetIDAccout();
-                users.user.Add(new DataUser { id = newId, nameUser = nameUser, password = password });
+                users.user.Add(new DataUser { id = newId, nameUser = nameUser, password = password, z_coin = 100, z_highScore = 0 });
 
                 Debug.Log("hien thi ra " + newId + " " + nameUser + "và ");
 
@@ -90,11 +85,16 @@ public class FormHander : MonoBehaviour, ICompoment
 
         if (GameMechanics.CheckInernet())
         {
-            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser,password, (success) =>
+            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser, password, (success) =>
             {
+
+
                 if (success)
                 {
                     GameManager.Instance.NameUserLogin = nameUser; // gawn ten nhân vật cho NameUserLogin để quan lí
+                    GameManager.Instance.CoinDown = DatabaseFirebaseManager.Instance.DataUserFound.z_coin;
+                    GameManager.Instance.ScoreDown = DatabaseFirebaseManager.Instance.DataUserFound.z_highScore;
+
                     UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập");
                 }
                 else
@@ -110,6 +110,9 @@ public class FormHander : MonoBehaviour, ICompoment
             if (foundUser != null)
             {
                 GameManager.Instance.NameUserLogin = nameUser; // gawn ten nhân vật cho NameUserLogin để quan lí
+                GameManager.Instance.CoinDown = DatabaseFirebaseManager.Instance.DataUserFound.z_coin;
+                GameManager.Instance.ScoreDown = DatabaseFirebaseManager.Instance.DataUserFound.z_highScore;
+
                 UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập offline");
             }
             else
@@ -119,7 +122,7 @@ public class FormHander : MonoBehaviour, ICompoment
         }
     }
 
-   
+
 
 
 

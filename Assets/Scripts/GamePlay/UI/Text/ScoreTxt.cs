@@ -1,13 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ScoreTxt :TextBase
+public class ScoreTxt : TextBase
 {
+    public int indexSelect;
     protected override void PrintText()
     {
-        this.text.SetText("Score: "+GameManager.Instance.Score.ToString());
-    }
+        if (indexSelect == 0)
+        {
+            this.text.SetText(GameManager.Instance.Score.ToString());
+        }
+        else if (indexSelect == 1)
+        {
+            {
+                this.text.SetText(GameManager.Instance.HighScore.ToString());
+            }
+        }
 
- 
+
+    }
 }

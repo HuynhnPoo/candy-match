@@ -1,20 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public abstract class TextBase : MonoBehaviour,ICompoment
+public abstract class TextBase : MonoBehaviour, ICompoment
 {
     [SerializeField] protected TextMeshProUGUI text;
 
     public void LoadCompoment()
     {
         if (text == null)
-        this.text=GetComponent<TextMeshProUGUI>();
+            this.text = GetComponent<TextMeshProUGUI>();
     }
 
     protected virtual void Awake()
-    { 
+    {
         this.LoadCompoment();
 
     }
@@ -23,5 +21,5 @@ public abstract class TextBase : MonoBehaviour,ICompoment
         this.PrintText();
     }
     protected abstract void PrintText();
-    
+
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,8 +12,8 @@ public class LevelDatabase : ScriptableObject
         foreach (LevelLayoutData level in levels)
         {
             if (level.levelNumber == levelNumber)
-                Debug.Log(level + "hien thi lvel "+ level.levelName);
-                return level;
+                Debug.Log(level + "hien thi lvel " + level.levelName);
+            return level;
         }
 
         Debug.LogWarning($"Level {levelNumber} not found! Returning default level.");

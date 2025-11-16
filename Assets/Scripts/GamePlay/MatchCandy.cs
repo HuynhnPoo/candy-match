@@ -1,12 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Data;
 using UnityEngine;
 
 public static class MatchCandy
 {
     // hàm xoa các  object
-    public static void DestroyAnfndRefill( CandyVisual[,] candyVisuals,GridManager grid,List<CandyVisual> candies, GameObject[] candyPrefabs)
+    public static void DestroyAnfndRefill(CandyVisual[,] candyVisuals, GridManager grid, List<CandyVisual> candies, GameObject[] candyPrefabs)
     {
         foreach (CandyVisual candy in candies)
         {
@@ -19,18 +18,18 @@ public static class MatchCandy
             Object.Destroy(candy.gameObject);// xóa object
 
 
-            grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid,candyPrefabs,grid.LocalSize)); //sau khi xoa sẽ thực hiện tạo và lấy đày
+            grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid, candyPrefabs, grid.LocalSize)); //sau khi xoa sẽ thực hiện tạo và lấy đày
         }
     }
 
-   
-    private static IEnumerator RefillAffterDelay(CandyVisual[,] candies,GridManager grid,GameObject[] candyPrefabs,float localSize)
+
+    private static IEnumerator RefillAffterDelay(CandyVisual[,] candies, GridManager grid, GameObject[] candyPrefabs, float localSize)
     {
         yield return new WaitForSeconds(0.5f);
         MatchCandy.CollapseColumn(candies, grid);
-        MatchCandy.Refill(grid, candies,candyPrefabs,localSize);
+        MatchCandy.Refill(grid, candies, candyPrefabs, localSize);
         yield return new WaitForSeconds(0.3f);
-        MatchCandy.MatchAllCandy(candies,grid,candyPrefabs);
+        MatchCandy.MatchAllCandy(candies, grid, candyPrefabs);
 
     }
 
@@ -52,7 +51,7 @@ public static class MatchCandy
 
         if (allMatches.Count >= 3)// nếu lơn hơn 3 sẽ thục hiện xóa
         {
-            DestroyAnfndRefill(candies,grid,new List<CandyVisual>(allMatches),candyPrefabs);
+            DestroyAnfndRefill(candies, grid, new List<CandyVisual>(allMatches), candyPrefabs);
         }
 
     }
@@ -135,14 +134,14 @@ public static class MatchCandy
         }
 
         // số lương thêm phải lơn hơn 3 mỡi thực hiện hợp nhất với các obj cung kiểu
-        if (vertical.Count >= 3) 
+        if (vertical.Count >= 3)
         {
             matchCandies.UnionWith(vertical);
             GameMechanics.AddScore(vertical.Count);
         }
         return matchCandies;
     }
-   
+
 
     //dồn candy lại xuông
     public static void CollapseColumn(CandyVisual[,] candies, GridManager grid)
@@ -153,9 +152,9 @@ public static class MatchCandy
             int writeRow = 0;
             for (int y = 0; y < grid.Height; y++)
             {
-                while (writeRow <y && grid.LevelLayout !=null && !grid.LevelLayout[x,writeRow] )
+                while (writeRow < y && grid.LevelLayout != null && !grid.LevelLayout[x, writeRow])
                 {
-                    writeRow ++;
+                    writeRow++;
                 }
                 if (grid.LevelLayout != null && !grid.LevelLayout[x, y]) continue;
                 if (candies[x, y] != null)
@@ -174,23 +173,23 @@ public static class MatchCandy
                     }
                     writeRow++; // Tăng vị trí thấp nhất có kẹo lên 1 (lên trên)
                 }
-               
+
             }
         }
     }
 
     // tạo lại các candy dể lấp đầy grid bằng candy
-    public static void Refill(GridManager grid,CandyVisual[,] candies,GameObject[] candyPrefabs,float localSize)
+    public static void Refill(GridManager grid, CandyVisual[,] candies, GameObject[] candyPrefabs, float localSize)
     {
         for (int x = 0; x < grid.Width; x++)
         {
             // Duyệt TỪ TRÊN XUỐNG DƯỚI (y)
             for (int y = grid.Height - 1; y >= 0; y--)
             {
-                if (grid.LevelLayout!=null && !grid.LevelLayout[x,y]) continue;
+                if (grid.LevelLayout != null && !grid.LevelLayout[x, y]) continue;
                 if (candies[x, y] != null) continue; // Bỏ qua nếu đã có kẹo
                 Vector2 pos2D = grid.board.GetWorldPosition(x, y);
-                int candyTypeID = Random.Range(0,candyPrefabs.Length);
+                int candyTypeID = Random.Range(0, candyPrefabs.Length);
                 Vector3 targetPos = grid.transform.position + new Vector3(pos2D.x, pos2D.y, -1);
                 Vector3 startPos = grid.transform.position + new Vector3(pos2D.x, grid.Height * (grid.CellSize + grid.Spacing), -1);
                 GameObject newCandy = Object.Instantiate(candyPrefabs[candyTypeID], startPos, Quaternion.identity, grid.transform);

@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 public class LoadSld : SliderBase
@@ -10,8 +8,8 @@ public class LoadSld : SliderBase
     bool isLoadComplete = false;
     protected override void OnChange(float amount)
     {
-        if (slider != null) 
-        slider.value = amount;
+        if (slider != null)
+            slider.value = amount;
 
     }
 
@@ -55,12 +53,12 @@ public class LoadSld : SliderBase
 
     IEnumerator IncrementLoadingBar()
     {
-        for (int i = 30; i < 101; i +=5)
+        for (int i = 30; i < 101; i += 5)
         {
 
-            float progress =(float) i / 100;
+            float progress = (float)i / 100;
             OnChange(progress);
-            
+
             yield return new WaitForSeconds(this.timer);
         }
         isLoadComplete = true;

@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public class CandyType
 {
@@ -20,11 +18,11 @@ public class CandyType
 
 public static class CandyName
 {
-    public static void LoadName(string name,CandyVisual typeCandy)
+    public static void LoadName(string name, CandyVisual typeCandy)
     {
         if (name.Equals(CandyType.CandyTypeList.RED.ToString(), StringComparison.OrdinalIgnoreCase))
         {
-            typeCandy.TypeCandy=CandyType.CandyTypeList.RED;
+            typeCandy.TypeCandy = CandyType.CandyTypeList.RED;
         }
         else if (name.Equals(CandyType.CandyTypeList.GREEN.ToString(), StringComparison.OrdinalIgnoreCase))
         {

@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -17,12 +16,12 @@ public class UIManager : SingletonBase<UIManager>
 
     public GameObject pausePn { get; private set; }
     public GameObject gameoverPn { get; private set; }
+    [SerializeField] private GameObject canvasFade;
 
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
-
 
     private void OnDisable()
     {
@@ -36,6 +35,18 @@ public class UIManager : SingletonBase<UIManager>
             Init();
         }
     }
+    private float lastTransitionTime = 0f;
+    private const float transitionCooldown = 1.0f; // Ngăn chặn spam
+
+    protected void Update()
+    {
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log(GameManager.Instance.CoinDown + " " + GameManager.Instance.ScoreDown);
+        }
+    }
+
 
 
     private void Init()
@@ -45,14 +56,24 @@ public class UIManager : SingletonBase<UIManager>
             this.managerCanvas = GameObject.FindGameObjectWithTag(StringManager.gameCTRTag);
             this.loginForm = FindGameObjectByNameHide.FindGameObjectByName(StringManager.LoginCanvas);
             this.forgotForm = FindGameObjectByNameHide.FindGameObjectByName(StringManager.forgotCanvas);
+
             this.notificationMess = FindGameObjectByNameHide.FindGameObjectByName("Backgroud-noti");
+
+            this.canvasFade = FindGameObjectByNameHide.FindGameObjectByName("Canvas_AniFade");
+
         }
         else if (SceneManager.GetActiveScene().name == SceneType.GAMEPLAY.ToString())
         {
             this.gameoverPn = FindGameObjectByNameHide.FindGameObjectByName(StringManager.gameOverPn);
             this.pausePn = FindGameObjectByNameHide.FindGameObjectByName(StringManager.pausePn);
         }
+        else if (SceneManager.GetActiveScene().name == SceneType.MAINMENU.ToString())
+        {
+
+            // this.canvasFade = FindGameObjectByNameHide.FindGameObjectByName("Canvas_AniFade");
+        }
     }
+
     public enum SceneType
     {
         FORM = 0,
@@ -75,7 +96,28 @@ public class UIManager : SingletonBase<UIManager>
         notificationMess?.SetActive(false);
         yield return null;
 
-        if (isLogin) UIManager.Instance.ChangeScene(UIManager.SceneType.MAINMENU);
+        if (isLogin)
+        {
+            canvasFade.SetActive(true);
+            AnimationFade fade = canvasFade.GetComponent<AnimationFade>();
+            fade.PlayAni("End_Trig");
+            yield return new WaitForSeconds(0.6f);
+
+            AsyncOperation loadOperation = ChangeScene(SceneType.MAINMENU);
+            loadOperation.allowSceneActivation = false;
+            while (loadOperation.progress < 0.9f)
+            {
+                yield return null;
+            }
+
+            loadOperation.allowSceneActivation = true;
+            yield return loadOperation;
+
+            fade.PlayAni("Start_Trig");
+            yield return new WaitForSeconds(0.7f);
+
+            canvasFade.SetActive(false);
+        }
     }
 
     public AsyncOperation ChangeScene(SceneType scene)

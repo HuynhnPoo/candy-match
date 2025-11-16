@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 
 public class Board
@@ -44,7 +42,7 @@ public class Board
 
 
     // ham swap candy
-   public void Swap(CandyVisual[,] candies, GridManager grid, int rowA, int colA, int rowB, int colB)
+    public void Swap(CandyVisual[,] candies, GridManager grid, int rowA, int colA, int rowB, int colB)
     {
         CandyVisual candyA = candies[rowA, colA]; // vị trí candy 1 trong manng
         CandyVisual candyB = candies[rowB, colB];
@@ -69,16 +67,16 @@ public class Board
         bool isMatched = grid.CheckMatchesForSwap(rowA, colA, rowB, colB);
         if (!isMatched)
         {
-            grid.StartCoroutine(RoutineRevertSpwan(candies, grid,rowA,colA, rowB, colB, candyA, candyB));
+            grid.StartCoroutine(RoutineRevertSpwan(candies, grid, rowA, colA, rowB, colB, candyA, candyB));
         }
 
     }
 
 
-    IEnumerator RoutineRevertSpwan(CandyVisual[,] candies,GridManager grid, int rowA, int colA, int rowB, int colB, CandyVisual candyA, CandyVisual candyB)
+    IEnumerator RoutineRevertSpwan(CandyVisual[,] candies, GridManager grid, int rowA, int colA, int rowB, int colB, CandyVisual candyA, CandyVisual candyB)
     {
         yield return new WaitForSeconds(0.5f); // sau 0.5 se thuc hien lai
-        RevertSwap(candies,grid, rowA, colA, rowB, colB, candyA, candyB);
+        RevertSwap(candies, grid, rowA, colA, rowB, colB, candyA, candyB);
     }
 
     // ham dổi nguoc lại cua candy
@@ -88,9 +86,9 @@ public class Board
         candies[rowB, colB] = candyB;
 
         Vector2 posA = GetWorldPosition(rowA, colA);
-        Vector2 posB =GetWorldPosition(rowB, colB);
+        Vector2 posB = GetWorldPosition(rowB, colB);
 
-        Vector3 candyPosA =  grid.transform.position + new Vector3(posA.x, posA.y, -1);
+        Vector3 candyPosA = grid.transform.position + new Vector3(posA.x, posA.y, -1);
         Vector3 candyPosB = grid.transform.position + new Vector3(posB.x, posB.y, -1);
 
 

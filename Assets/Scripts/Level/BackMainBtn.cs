@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class BackMainBtn : ButtonBase
 {
     public override void OnClick()
@@ -9,5 +5,5 @@ public class BackMainBtn : ButtonBase
         UIManager.Instance.ChangeScene(UIManager.SceneType.MAINMENU);
     }
 
-    
+
 }

@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using UnityEngine;
-using static UnityEngine.UIElements.UxmlAttributeDescription;
+﻿using UnityEngine;
 
 public class ConfirmFormHander : MonoBehaviour, ICompoment
 {
@@ -36,7 +32,7 @@ public class ConfirmFormHander : MonoBehaviour, ICompoment
         if (GameMechanics.CheckInernet())
         {
 
-            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser,"", (success) =>
+            DatabaseFirebaseManager.Instance.ReadDataOption(nameUser, "", (success) =>
             {
 
                 Debug.Log(success);

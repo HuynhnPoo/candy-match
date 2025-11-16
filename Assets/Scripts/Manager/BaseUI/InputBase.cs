@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 #if UNITY_WEBGL && !UNITY_EDITOR
 using System.Runtime.InteropServices;
 #endif
-public abstract class InputBase : MonoBehaviour, ICompoment,IPointerClickHandler
+public abstract class InputBase : MonoBehaviour, ICompoment, IPointerClickHandler
 {
     [SerializeField] protected TMP_InputField input;
     [SerializeField] protected bool isPassword = false; // Gán trong Inspector nếu là password
@@ -32,19 +32,19 @@ public abstract class InputBase : MonoBehaviour, ICompoment,IPointerClickHandler
         this.AddEventListener();
 
         // Khi chọn vào InputField
-       // input.onSelect.AddListener(OnInputFieldSelected);
+        // input.onSelect.AddListener(OnInputFieldSelected);
     }
 
-   /* private void OnInputFieldSelected(string currentText)
-    {
-#if UNITY_WEBGL && !UNITY_EDITOR
-        if (DeviceDetector.IsMobilePlatformInWebGL())
-        {
-            // Gọi JS để hiện bàn phím ảo
-            FocusInputField(gameObject.name, isPassword);
-        }
-#endif
-    }*/
+    /* private void OnInputFieldSelected(string currentText)
+     {
+ #if UNITY_WEBGL && !UNITY_EDITOR
+         if (DeviceDetector.IsMobilePlatformInWebGL())
+         {
+             // Gọi JS để hiện bàn phím ảo
+             FocusInputField(gameObject.name, isPassword);
+         }
+ #endif
+     }*/
 
     protected virtual void AddEventListener()
     {

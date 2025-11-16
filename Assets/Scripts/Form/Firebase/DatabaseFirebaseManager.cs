@@ -5,9 +5,7 @@ using Firebase.Database;
 #endif
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
@@ -18,8 +16,8 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
     private DatabaseReference dataRef; // biên firebase danh cho pc và mobie
 #endif
     private string dataURL = "https://saga-candy-default-rtdb.asia-southeast1.firebasedatabase.app/"; // link api cho web
-     
-    public   DataUser DataUserFound { get;  set; } = null;
+
+    public DataUser DataUserFound { get; set; } = null;
 
     private void OnEnable()
     {
@@ -54,14 +52,14 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
                 Debug.Log("khơi tạo thành công firebase");
                 //
                 UpLoadAllData();// tải tất cả dữ liệu lên trên fire base khi bắt đầu game
-                                // ReadDataOption("huynh0");
+                // ReadDataOption("huynh0");
             }
             else
                 Debug.LogWarning("khởi tạo  firebase không thành công" + task.Exception);
 
         });
 #else
-        UpLoadAllData();
+       UpLoadAllData();
 
 #endif
     }
@@ -72,7 +70,19 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
         UserList user = new UserList().LoadUsers(); // load dữ liệu ở trong json
         foreach (var item in user.user)
         {
-            WriteDataOption(item); //viêt các dữ liệu đọc được đưa lên firebase
+            ReadDataOption(item.id, "", success =>
+            {
+                if (success)
+                {
+                    DataUser dataUser = DataUserFound;
+
+                    if (dataUser != null && dataUser.nameUser == item.nameUser) Debug.LogWarning("ID này đã được tạo ");
+                    else Debug.Log("cả ID và tên đã dduwojc sử dụng");
+
+                }
+                else WriteDataOption(item); //viêt các dữ liệu đọc được đưa lên firebase
+
+            });
         }
     }
 
@@ -131,7 +141,14 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
                             if (userData.nameUser == user)
                             {
                                 Debug.Log($"Tìm thấy user {userData.id} với tên {userData.nameUser}");
-                                 DataUserFound = userData;
+                                DataUserFound = userData;
+                                onComplete?.Invoke(true);
+                                return;
+                            }
+                            if (userData.id == user)
+                            {
+                                Debug.Log($"Tìm thấy user {userData.id} với tên {userData.nameUser}");
+                                DataUserFound = userData;
                                 onComplete?.Invoke(true);
                                 return;
                             }
@@ -142,6 +159,7 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
                             if (userData.nameUser == user && userData.password == password)
                             {
                                 Debug.Log($"Tìm thấy user {userData.id} với tên {userData.nameUser}");
+                                DataUserFound = userData;
                                 onComplete?.Invoke(true);
                                 return;
                             }
@@ -209,16 +227,25 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
                             found = true;
                             yield break;
                         }
-                    }
-                    else
-                    {
-                        if (userFound.nameUser == name && userFound.password == password)
+                        if (userFound.nameUser == name)
                         {
+                            DataUserFound = userFound;
                             onComplete?.Invoke(userFound.nameUser);
                             found = true;
                             yield break;
                         }
                     }
+                    else
+                    {
+                        if (userFound.nameUser == name && userFound.password == password)
+                        {
+                            DataUserFound = userFound;
+                            onComplete?.Invoke(userFound.nameUser);
+                            found = true;
+                            yield break;
+                        }
+                    }
+
                 }
 
                 if (!found)

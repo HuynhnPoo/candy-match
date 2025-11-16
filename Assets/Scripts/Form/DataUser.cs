@@ -8,6 +8,10 @@ public class DataUser
     public string id;
     public string nameUser;
     public string password;
+    [UnityEngine.Serialization.FormerlySerializedAs("coin")]
+    public int z_coin = 0;
+    [UnityEngine.Serialization.FormerlySerializedAs("high score")]
+    public int z_highScore = 0;
 }
 
 [System.Serializable]
@@ -46,6 +50,6 @@ public class UserList
         } while (user.user.Exists(user => user.id == id));
         return id;
     }
-    
+
 }
 

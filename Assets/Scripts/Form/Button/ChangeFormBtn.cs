@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class ChangeFormBtn : ButtonBase
 {
     public override void OnClick()
@@ -20,7 +16,7 @@ public class ChangeFormBtn : ButtonBase
 
         }
 
-        else if(UIManager.Instance.loginForm.activeSelf == true) 
+        else if (UIManager.Instance.loginForm.activeSelf == true)
         {
             UIManager.Instance.loginForm.SetActive(false);
             UIManager.Instance.forgotForm.SetActive(true);
@@ -29,5 +25,5 @@ public class ChangeFormBtn : ButtonBase
 
     }
 
-   
+
 }

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : SingletonBase<GameManager>
@@ -9,15 +6,19 @@ public class GameManager : SingletonBase<GameManager>
     private static bool isPaused = false;
     public bool IsPaused { get => isPaused; set => isPaused = value; }
 
-    public  bool IsGameOver { set; get; } = false;
-    public  bool IsWinGame { set; get; } = false;
+    public bool IsGameOver { set; get; } = false;
+    public bool IsWinGame { set; get; } = false;
 
-    bool hasEndGame=false;
+    bool hasEndGame = false;
     private int score = 0;
-    private static int highScore = 0;
+    public int HighScore { set; get; } = 0;
+
     public int Score { get => score; set => score = value; }
 
     public int Coin { set; get; } = 0;
+
+    public int CoinDown { set; get; } = 0;
+    public int ScoreDown { set; get; } = 1;
 
     private static int moveStep = 25;
     public int MoveStep { set => moveStep = value; get => moveStep; }
@@ -30,6 +31,7 @@ public class GameManager : SingletonBase<GameManager>
     public string StatusGameStr { get; set; } = "null";
 
     public event Action OnGameOver;
+    public Action<string> OnboostGame;
 
     public void Init()
     {
@@ -39,6 +41,7 @@ public class GameManager : SingletonBase<GameManager>
         IsWinGame = false;
         IsGameOver = false;
         OnGameOver = GameOver;
+
     }
 
     public void Pausing(bool paused)
@@ -60,24 +63,13 @@ public class GameManager : SingletonBase<GameManager>
 
     private void Update()
     {
-        if ((IsWinGame || IsGameOver)&& !hasEndGame)
+        if ((IsWinGame || IsGameOver) && !hasEndGame)
         {
             hasEndGame = true;
             Debug.Log("thuc hien end game");
-            OnGameOver?.Invoke(); 
-            
+            OnGameOver?.Invoke();
+
         }
-
-
-       /* if (Input.GetKey(KeyCode.V))
-        {
-            Debug.Log("thuc hien input v");
-            IsWinGame = true;
-        } 
-        if (Input.GetKey(KeyCode.B))
-        {
-            IsGameOver = true;
-        }*/
     }
 
     public void GameOver()
@@ -87,11 +79,15 @@ public class GameManager : SingletonBase<GameManager>
         {
             StatusGameStr = "Game Over";
         }
-        else if(IsWinGame)
+        else if (IsWinGame)
         {
             StatusGameStr = "Win Game";
         }
+        GameMechanics.CalculateMoney(score, (int)GameMechanics.CountDown(), moveStep);
+        GameMechanics.CheckHightScore(score);
+        HighScore = PlayerPrefs.GetInt(StringManager.highScoreStr);
         Time.timeScale = 0f;
+
     }
 
 
@@ -105,5 +101,6 @@ public class GameManager : SingletonBase<GameManager>
     {
 
     }
+
 
 }

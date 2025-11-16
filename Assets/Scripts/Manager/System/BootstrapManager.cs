@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 public class BootstrapManager : MonoBehaviour
@@ -74,9 +72,6 @@ public class PreprocessorDirectives
         // Tắt log cho Debug.Log khi đã build (bản Release)
         Debug.unityLogger.logEnabled = false;
 #endif
-
-
-
     }
 
 }

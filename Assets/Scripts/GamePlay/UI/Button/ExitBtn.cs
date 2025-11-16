@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ExitBtn : ButtonBase
@@ -13,5 +11,5 @@ public class ExitBtn : ButtonBase
         UIManager.Instance.ChangeScene(UIManager.SceneType.LOADING);
     }
 
-   
+
 }

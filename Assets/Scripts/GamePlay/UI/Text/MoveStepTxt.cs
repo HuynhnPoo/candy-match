@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class MoveStepTxt : TextBase
 {
     protected override void PrintText()
@@ -9,5 +5,5 @@ public class MoveStepTxt : TextBase
         text.SetText(GameManager.Instance.MoveStep.ToString());
     }
 
-  
+
 }

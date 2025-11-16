@@ -1,6 +1,4 @@
-﻿using JetBrains.Annotations;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -33,7 +31,6 @@ public static class GameMechanics
         {
             score += 10;
         }
-        Debug.Log("diemrd cua game là " + score);
         GameManager.Instance.Score = score;
     }
 
@@ -61,10 +58,10 @@ public static class GameMechanics
         return Application.internetReachability != NetworkReachability.NotReachable;
     }
 
-    public static void CalculateMoney(int score, int time,int stepMove)
+    public static void CalculateMoney(int score, int time, int stepMove)
     {
-        int coinEarned = (score*(int)scoreMultiles)+(time*bonusRewads)+(stepMove*bonusRewads);
-        GameManager.Instance.Coin= coinEarned;
+        int coinEarned = (score * (int)scoreMultiles) + (time * bonusRewads) + (stepMove * bonusRewads);
+        GameManager.Instance.Coin = coinEarned;
     }
     public static string ConvertFirebaseJsonToArray(string json)
     {
@@ -130,5 +127,17 @@ public static class GameMechanics
     {
         if (s == null) return "";
         return s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    }
+
+    public static void CheckHightScore(int score)
+    {
+        int currentScore = PlayerPrefs.GetInt(StringManager.highScoreStr);
+        if (score > currentScore)
+        {
+
+            PlayerPrefs.SetInt(StringManager.highScoreStr, score);
+            PlayerPrefs.Save();
+        }
+
     }
 }

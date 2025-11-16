@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour, ICompoment
@@ -54,7 +53,7 @@ public class GridManager : MonoBehaviour, ICompoment
         visualGrid = new CandyVisual[this.width, this.height];
 
         GameManager.Instance.Init();
-        
+
         if (GameManager.Instance.CurrentLevel == 0)
         {
 
@@ -74,7 +73,7 @@ public class GridManager : MonoBehaviour, ICompoment
     // Update is called once per frame
     void Update()
     {
-      //  if (Input.GetKeyDown(KeyCode.V)) GameManager.Instance.Score = GameMechanics.AddScore(5);
+        //  if (Input.GetKeyDown(KeyCode.V)) GameManager.Instance.Score = GameMechanics.AddScore(5);
     }
 
     void ClearGrid()
