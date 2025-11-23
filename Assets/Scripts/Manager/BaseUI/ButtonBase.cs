@@ -19,20 +19,22 @@ public abstract class ButtonBase : MonoBehaviour, ICompoment
 
     protected virtual void Awake()
     {
-        this.LoadCompoment();
     }
     protected virtual void OnEnable()
     {
+        this.LoadCompoment();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
+     
         this.AddEventListener();
 
     }
     public virtual void AddEventListener()
     {
-        button.onClick.AddListener(this.OnClick);
+       
+        this.button.onClick.AddListener(this.OnClick);
     }
     public abstract void OnClick();
 

@@ -32,7 +32,9 @@ public static class GameMechanics
             score += 10;
         }
         GameManager.Instance.Score = score;
+
     }
+
 
 
     public static float CountDown()
@@ -58,11 +60,17 @@ public static class GameMechanics
         return Application.internetReachability != NetworkReachability.NotReachable;
     }
 
+    // ham tinh tinh toan gia trij kiem tien
     public static void CalculateMoney(int score, int time, int stepMove)
     {
         int coinEarned = (score * (int)scoreMultiles) + (time * bonusRewads) + (stepMove * bonusRewads);
+
         GameManager.Instance.Coin = coinEarned;
+
+        GameManager.Instance.TotalCoin += GameManager.Instance.Coin;
+        PlayerPrefs.SetInt(StringManager.coinSaveStr, GameManager.Instance.TotalCoin);
     }
+
     public static string ConvertFirebaseJsonToArray(string json)
     {
         if (string.IsNullOrWhiteSpace(json) || json == "null")
@@ -132,12 +140,37 @@ public static class GameMechanics
     public static void CheckHightScore(int score)
     {
         int currentScore = PlayerPrefs.GetInt(StringManager.highScoreStr);
+
+        Debug.Log("hien thi score" + currentScore + " " + score);
         if (score > currentScore)
         {
 
             PlayerPrefs.SetInt(StringManager.highScoreStr, score);
             PlayerPrefs.Save();
+
+            GameManager.Instance.HighScore = PlayerPrefs.GetInt(StringManager.highScoreStr);
         }
 
     }
+
+
+
+    // ham mua
+    public static void BuyItemChecking(Dictionary<string, ShopItemData> listItem, string nameItem)
+    {
+        if (listItem.TryGetValue(nameItem, out ShopItemData itemData))
+        {
+            /*if (GameManager.Instance.Coin >= itemData.priceItem && itemData.quatityItem < itemData.maxQuatityItem)
+                GameManager.Instance.Coin -= itemData.priceItem;
+            PlayerPrefs.SetInt(StringManager.coinSaveStr, GameManager.Instance.Coin);
+            PlayerPrefs.Save();*/ 
+            //cho playpef xuongo add item
+            IteminventoryManager.AddItem(itemData); // them vo trong danh sach sau khi quatityTxt
+
+          
+        }
+    }
+
+
+
 }

@@ -101,10 +101,12 @@ public class IteminventoryManager
         if (invetory.ContainsKey(key))
         {
             invetory[key].QuatityItem++; // nêu có rồi thi sẽ tăng quatity lên 
+            itemData.quatityItem = invetory[key].QuatityItem;
+            Debug.Log("so luong item"+itemData.quatityItem);
         }
         else
         {
-            ItemInfo item = new ItemInfo(itemData.nameItem, itemData.quatityItem, itemData.typeItem);
+            ItemInfo item = new ItemInfo(itemData.nameItem, 1, itemData.typeItem);
             invetory.Add(key, item);    // tạo và thêm vao trong inventory
         }
 
@@ -115,34 +117,40 @@ public class IteminventoryManager
 
     public static void UseItem(string nameItem)
     {
+        
         Dictionary<string, ItemInfo> invetory = Loadinventory();
 
         if (invetory.ContainsKey(nameItem) && invetory[nameItem].QuatityItem > 0)
         {
+
             ItemInfo itemInfo = invetory[nameItem];
 
             invetory[nameItem].QuatityItem--;
             if (invetory[nameItem].QuatityItem <= 0) invetory.Remove(nameItem);
             SaveInventory(invetory);
-            Debug.Log(invetory[nameItem].TypeItem);
+           
+            // ham thu hien boost cho game
             OnItemUsed?.Invoke(invetory[nameItem].TypeItem,nameItem);
 
         }
     }
 
-    public int GetItemCount(string nameItem)
-
+    public static int GetItemCount(string nameItem)
     {
         Dictionary<string, ItemInfo> invetory = Loadinventory(); // load các item đã lưu
         if (invetory.ContainsKey(nameItem))
         {
+            Debug.Log("hien thi "+ invetory[nameItem].QuatityItem );
             return invetory[nameItem].QuatityItem; // trả về số lượng đố
         }
         return 0;
     }
+
     public static void RemoveItem(ShopItemData itemData)  // ham xoa danh sachs
     {
         PlayerPrefs.DeleteKey(StringManager.saveBuyItem);
         PlayerPrefs.Save();
     }
+
+
 }

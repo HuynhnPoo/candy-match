@@ -15,8 +15,8 @@ public class GameManager : SingletonBase<GameManager>
 
     public int Score { get => score; set => score = value; }
 
-    public int Coin { set; get; } = 0;
-
+    public int Coin { set; get; } = 0; 
+    public int TotalCoin { set; get; } = 0;
     public int CoinDown { set; get; } = 0;
     public int ScoreDown { set; get; } = 1;
 
@@ -41,6 +41,9 @@ public class GameManager : SingletonBase<GameManager>
         IsWinGame = false;
         IsGameOver = false;
         OnGameOver = GameOver;
+
+        HighScore = PlayerPrefs.GetInt(StringManager.highScoreStr);
+        TotalCoin = PlayerPrefs.GetInt(StringManager.coinSaveStr);
 
     }
 
@@ -85,12 +88,12 @@ public class GameManager : SingletonBase<GameManager>
         }
         GameMechanics.CalculateMoney(score, (int)GameMechanics.CountDown(), moveStep);
         GameMechanics.CheckHightScore(score);
-        HighScore = PlayerPrefs.GetInt(StringManager.highScoreStr);
+        
         Time.timeScale = 0f;
 
     }
 
-
+    
 
     public void WinGame()
     {

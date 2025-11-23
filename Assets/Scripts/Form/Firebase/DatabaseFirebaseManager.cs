@@ -19,6 +19,9 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
 
     public DataUser DataUserFound { get; set; } = null;
 
+    private static DataUser userFound;
+    public DataUser UserFound { set => userFound = value; get => userFound; }
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded; // compoment cho scene
@@ -28,6 +31,7 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
     {
         SceneManager.sceneLoaded -= OnSceneLoaded; //cac cooment cho scene
     }
+
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode sceneMode)
     {
@@ -112,6 +116,8 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
 
     public void ReadDataOption(string user, string password = "", Action<bool> onComplete = null)
     {
+
+        DataUserFound = null;
 
 #if UNITY_WEBGL //su dung khi build ra wed
         StartCoroutine(GetDataCoroutine(user, password, (result) =>
@@ -227,7 +233,7 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
                             found = true;
                             yield break;
                         }
-                        if (userFound.nameUser == name)
+                        if (userFound.id == name)
                         {
                             DataUserFound = userFound;
                             onComplete?.Invoke(userFound.nameUser);
@@ -261,4 +267,37 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
             }
         }
     }
+
+    //ham caapj nhap gias tri score va coin
+    public void UpLoadCoinAndScore(int newCoin, int newScore)
+    {
+
+        DataUser currentUser = DatabaseFirebaseManager.Instance.DataUserFound;
+
+        if (currentUser != null)
+        {
+            currentUser.z_coin = newCoin;
+            currentUser.z_highScore = newScore;
+
+            if (GameMechanics.CheckInernet()) //ghi đè dữ liệu Coin và Score trên Firebase
+                WriteDataOption(currentUser);
+            else
+            {
+                // Tải danh sách người dùng hiện tại từ JSON
+                UserList users = new UserList().LoadUsers();
+
+                // Tìm index của người dùng hiện tại trong danh sách
+                int index = users.user.FindIndex(u => u.id == currentUser.id);
+                
+                if(index != -1)
+                {
+                    // Ghi đè người dùng đã cập nhật
+                    users.user[index] = currentUser;
+                    users.SaveData(users);
+                   
+                }
+            }
+        }
+    }
+
 }

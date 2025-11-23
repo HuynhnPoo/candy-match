@@ -18,6 +18,10 @@ public class UIManager : SingletonBase<UIManager>
     public GameObject gameoverPn { get; private set; }
     [SerializeField] private GameObject canvasFade;
 
+    // game obj main menu
+    public GameObject shopCanvas { get; private set; }
+    public int QuatityItem { set; get; }
+
     private void OnEnable()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -47,8 +51,6 @@ public class UIManager : SingletonBase<UIManager>
         }
     }
 
-
-
     private void Init()
     {
         if (SceneManager.GetActiveScene().name == SceneType.FORM.ToString())
@@ -69,8 +71,7 @@ public class UIManager : SingletonBase<UIManager>
         }
         else if (SceneManager.GetActiveScene().name == SceneType.MAINMENU.ToString())
         {
-
-            // this.canvasFade = FindGameObjectByNameHide.FindGameObjectByName("Canvas_AniFade");
+            this.shopCanvas = FindGameObjectByNameHide.FindGameObjectByName("Shop_Canvas");
         }
     }
 

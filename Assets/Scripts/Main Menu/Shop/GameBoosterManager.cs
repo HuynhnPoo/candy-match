@@ -18,12 +18,13 @@ public class GameBoosterManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+       
     }
 
 
     void HanldeItemUsed(TypeItem typeItem,string nameItem)
     {
+        Debug.Log(typeItem +nameItem);
         switch (typeItem)
         {
             case TypeItem.BUFF:
@@ -32,18 +33,11 @@ public class GameBoosterManager : MonoBehaviour
                 break;
             case TypeItem.ACTIVE:
                 Debug.Log("hien thuc hien active");
-                GameManager.Instance.OnboostGame?.Invoke("BoostActiveHamer");
+                // actice dang có aaaa nên chưa dung hammer được chú ý
+                GameManager.Instance.OnboostGame?.Invoke("BoostActiveHammer");
                 break;
             default:
                 break;
         }
-    }
-
-  
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 }

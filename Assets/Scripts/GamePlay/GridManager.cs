@@ -34,9 +34,6 @@ public class GridManager : MonoBehaviour, ICompoment
 
     private LevelManager levelManager;
 
-
-
-
     private void OnEnable()
     {
         levelManager = GetComponent<LevelManager>();
@@ -167,7 +164,6 @@ public class GridManager : MonoBehaviour, ICompoment
 
     public void SelectCandy(int x, int y)
     {
-        Debug.Log("hient thi" + selectVisualGrid[x, y]);
         if (selectCandy == null)
         {
             selectCandy = new Vector2Int(x, y);

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 public enum TypeItem
 {
     NONE,
@@ -18,5 +19,15 @@ public class ShopItemData : ScriptableObject
     public int quatityItem;// sô lương item
     public int maxQuatityItem;
 
+    public Action<int> OnQuatityChanged;
+    public int QuatityItem
+    {
+        get => quatityItem;
+        set
+        {
+            if (quatityItem != value) { quatityItem = value; OnQuatityChanged?.Invoke(quatityItem); }
+        }
+    }
 
+   
 }

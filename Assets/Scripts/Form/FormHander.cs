@@ -91,10 +91,13 @@ public class FormHander : MonoBehaviour, ICompoment
 
                 if (success)
                 {
-                    GameManager.Instance.NameUserLogin = nameUser; // gawn ten nhân vật cho NameUserLogin để quan lí
-                    GameManager.Instance.CoinDown = DatabaseFirebaseManager.Instance.DataUserFound.z_coin;
-                    GameManager.Instance.ScoreDown = DatabaseFirebaseManager.Instance.DataUserFound.z_highScore;
+                    DataUser currentUser = DatabaseFirebaseManager.Instance.DataUserFound;
+                    DatabaseFirebaseManager.Instance.UserFound = currentUser;
+                    GameManager.Instance.NameUserLogin = currentUser.nameUser; // gawn ten nhân vật cho NameUserLogin để quan lí
+                    GameManager.Instance.CoinDown = currentUser.z_coin;
+                    GameManager.Instance.ScoreDown = currentUser.z_highScore;
 
+                    Debug.Log("hien thi "+currentUser.nameUser);
                     UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập");
                 }
                 else
@@ -109,9 +112,10 @@ public class FormHander : MonoBehaviour, ICompoment
 
             if (foundUser != null)
             {
-                GameManager.Instance.NameUserLogin = nameUser; // gawn ten nhân vật cho NameUserLogin để quan lí
-                GameManager.Instance.CoinDown = DatabaseFirebaseManager.Instance.DataUserFound.z_coin;
-                GameManager.Instance.ScoreDown = DatabaseFirebaseManager.Instance.DataUserFound.z_highScore;
+                DatabaseFirebaseManager.Instance.DataUserFound = foundUser;
+                GameManager.Instance.NameUserLogin = foundUser.nameUser; // gawn ten nhân vật cho NameUserLogin để quan lí
+                GameManager.Instance.CoinDown = foundUser.z_coin;
+                GameManager.Instance.ScoreDown = foundUser.z_highScore;
 
                 UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập offline");
             }

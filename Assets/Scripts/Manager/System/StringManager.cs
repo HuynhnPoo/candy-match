@@ -1,4 +1,5 @@
 
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 public static class StringManager
@@ -7,6 +8,9 @@ public static class StringManager
 
     public static readonly string firebaseUser = "Users";
     public static readonly string saveBuyItem = "SaveBuyItem";
+
+    // playpref coin score
+
 
 
     // scene form
@@ -23,12 +27,17 @@ public static class StringManager
 
     // save playfrep
 
+    public static readonly string coinSaveStr = "CoinSave";
     public static readonly string highScoreStr = "HighScore";
 
     // boost game
 
-    public static readonly string increaseTurn = "BoostTurn";
-    public static readonly string increaseTime = "BoostTime";
+    public static readonly string[] itemBoosts =
+    {
+        "BoostTurn",
+        "BoostTime"
+    };
 
+   
 
 }
