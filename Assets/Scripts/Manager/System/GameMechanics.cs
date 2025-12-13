@@ -160,17 +160,28 @@ public static class GameMechanics
     {
         if (listItem.TryGetValue(nameItem, out ShopItemData itemData))
         {
-            /*if (GameManager.Instance.Coin >= itemData.priceItem && itemData.quatityItem < itemData.maxQuatityItem)
+            if (GameManager.Instance.Coin >= itemData.priceItem && itemData.quatityItem < itemData.maxQuatityItem)
+            {
+
                 GameManager.Instance.Coin -= itemData.priceItem;
-            PlayerPrefs.SetInt(StringManager.coinSaveStr, GameManager.Instance.Coin);
-            PlayerPrefs.Save();*/ 
-            //cho playpef xuongo add item
-            IteminventoryManager.AddItem(itemData); // them vo trong danh sach sau khi quatityTxt
+                PlayerPrefs.SetInt(StringManager.coinSaveStr, GameManager.Instance.Coin);
 
-          
+                PlayerPrefs.Save();
+                GameManager.Instance.Coin = PlayerPrefs.GetInt(StringManager.coinSaveStr);
+                //cho playpef xuongo add item
+                IteminventoryManager.AddItem(itemData); // them vo trong danh sach sau khi quatityTxt
+
+
+            }
+
+            else
+            {
+                UIManager.Instance.ShowNotificationBuy();
+            }
+
+
         }
+
     }
-
-
 
 }

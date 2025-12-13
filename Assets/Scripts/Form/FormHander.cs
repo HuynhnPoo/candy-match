@@ -97,7 +97,9 @@ public class FormHander : MonoBehaviour, ICompoment
                     GameManager.Instance.CoinDown = currentUser.z_coin;
                     GameManager.Instance.ScoreDown = currentUser.z_highScore;
 
-                    Debug.Log("hien thi "+currentUser.nameUser);
+                    GameManager.Instance.Coin = GameManager.Instance.CoinDown;
+                    GameManager.Instance.HighScore= GameManager.Instance.ScoreDown;
+
                     UIManager.Instance.ShowNotification(true, "Thực hiện thành công đăng nhập");
                 }
                 else

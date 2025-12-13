@@ -1,4 +1,5 @@
 using UnityEditor;
+using UnityEngine;
 
 public class QuitBtn : ButtonBase
 {
@@ -10,4 +11,6 @@ public class QuitBtn : ButtonBase
         Application.Quit(); // original code to quit Unity 
 #endif
     }
+
+
 }

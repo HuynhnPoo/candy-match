@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/ADS.unity
+    guid: 9950e5b9034c0d04c80ccff5c4c9afa3
+  - enabled: 1
+    path: Assets/Samples/Ads Mediation/9.2.0/Unity LevelPlay Sample/Scenes/LevelPlaySample.unity
+    guid: bd1eb3e1953724de08fadd7cbbc6d358
+  - enabled: 1
     path: Assets/Scenes/FORM.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1

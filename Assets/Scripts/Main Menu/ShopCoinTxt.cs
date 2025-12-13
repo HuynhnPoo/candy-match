@@ -10,7 +10,7 @@ public class ShopCoinTxt : TextBase
              GameManager.Instance.Coin = GameManager.Instance.CoinDown;
              text.SetText(GameManager.Instance.Coin.ToString());
          }*/
-        text.SetText(GameManager.Instance.CoinDown.ToString());
+        text.SetText(GameManager.Instance.Coin.ToString());
     }
 }
 

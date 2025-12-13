@@ -39,7 +39,7 @@ public class UIManager : SingletonBase<UIManager>
             Init();
         }
     }
-    private float lastTransitionTime = 0f;
+  //  private float lastTransitionTime = 0f;
     private const float transitionCooldown = 1.0f; // Ngăn chặn spam
 
     protected void Update()
@@ -120,6 +120,20 @@ public class UIManager : SingletonBase<UIManager>
             canvasFade.SetActive(false);
         }
     }
+
+
+    public void ShowNotificationBuy()
+    {
+        StartCoroutine(ShowNotificationCorutine());
+    }
+
+    IEnumerator ShowNotificationCorutine() 
+    {
+        shopCanvas.transform.GetChild(2).gameObject.SetActive(true);
+        yield return new WaitForSeconds(1);
+        shopCanvas.transform.GetChild(2).gameObject.SetActive(false);
+    }
+    
 
     public AsyncOperation ChangeScene(SceneType scene)
     {

@@ -272,13 +272,14 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
     public void UpLoadCoinAndScore(int newCoin, int newScore)
     {
 
-        DataUser currentUser = DatabaseFirebaseManager.Instance.DataUserFound;
-
+        DataUser currentUser = UserFound;
+       
         if (currentUser != null)
         {
             currentUser.z_coin = newCoin;
             currentUser.z_highScore = newScore;
 
+            Debug.Log("hien thi ra user cập nhật " + currentUser.id +currentUser.z_highScore);
             if (GameMechanics.CheckInernet()) //ghi đè dữ liệu Coin và Score trên Firebase
                 WriteDataOption(currentUser);
             else
@@ -298,6 +299,7 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
                 }
             }
         }
+      //  else { Debug.LogWarning("chưa thấy current user để cập nhật " + currentUser); }
     }
 
 }

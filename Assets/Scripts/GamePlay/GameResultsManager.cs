@@ -11,7 +11,7 @@ public class GameResultsManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.V) || GameMechanics.CountDown() <= 0 || GameManager.Instance.MoveStep <= 0)
+       /* if (Input.GetKeyDown(KeyCode.V) || GameMechanics.CountDown() <= 0 || GameManager.Instance.MoveStep <= 0)
         {
             GameManager.Instance.IsGameOver = true;
         }
@@ -19,5 +19,6 @@ public class GameResultsManager : MonoBehaviour
         {
             GameManager.Instance.IsWinGame = true;
         }
+      */
     }
 }

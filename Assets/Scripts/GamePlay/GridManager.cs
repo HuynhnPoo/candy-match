@@ -61,7 +61,7 @@ public class GridManager : MonoBehaviour, ICompoment
             this.cellSize = (int)0.4f;
             this.spacing = 0.6f;
             this.localSize = 0.3f;
-
+          
             levelManager.LoadNewLevelData(GameManager.Instance.CurrentLevel);
             LoadAndInstantiateGrid();
         }
@@ -70,7 +70,16 @@ public class GridManager : MonoBehaviour, ICompoment
     // Update is called once per frame
     void Update()
     {
-        //  if (Input.GetKeyDown(KeyCode.V)) GameManager.Instance.Score = GameMechanics.AddScore(5);
+          if (Input.GetKeyDown(KeyCode.Z))
+        {
+
+            this.cellSize = (int)0.4f;
+            this.spacing = 0.6f;
+            this.localSize = 0.3f;
+            this.transform.position = new Vector3(-2.15f, -3.15f, 0);
+            levelManager.LoadNewLevelData(1);
+            LoadAndInstantiateGrid();
+        };
     }
 
     void ClearGrid()

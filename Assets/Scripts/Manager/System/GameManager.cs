@@ -42,10 +42,8 @@ public class GameManager : SingletonBase<GameManager>
         IsGameOver = false;
         OnGameOver = GameOver;
 
-        HighScore = PlayerPrefs.GetInt(StringManager.highScoreStr);
-        TotalCoin = PlayerPrefs.GetInt(StringManager.coinSaveStr);
-
     }
+
 
     public void Pausing(bool paused)
     {
@@ -78,6 +76,7 @@ public class GameManager : SingletonBase<GameManager>
     public void GameOver()
     {
         UIManager.Instance.gameoverPn.SetActive(true);
+      
         if (IsGameOver)
         {
             StatusGameStr = "Game Over";
@@ -86,24 +85,13 @@ public class GameManager : SingletonBase<GameManager>
         {
             StatusGameStr = "Win Game";
         }
+
         GameMechanics.CalculateMoney(score, (int)GameMechanics.CountDown(), moveStep);
         GameMechanics.CheckHightScore(score);
-        
+      //  DatabaseFirebaseManager.Instance.UpLoadCoinAndScore(Coin,HighScore);
+
         Time.timeScale = 0f;
 
     }
-
-    
-
-    public void WinGame()
-    {
-        Debug.Log("chien thang game");
-    }
-
-    public void SaveScore()
-    {
-
-    }
-
 
 }

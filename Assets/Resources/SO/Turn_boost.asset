@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typeItem: 1
   nameItem: BoostTurn
-  priceItem: 0
+  priceItem: 5
   valueBoostItem: 0
-  quatityItem: 55
+  quatityItem: 16
   maxQuatityItem: 50

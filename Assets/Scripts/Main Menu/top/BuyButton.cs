@@ -27,7 +27,7 @@ public class BuyButron : ButtonBase
     }
     public void PurcharseItem(int index)
     {
-       
+      
         switch (index)
         {
             case 0:
@@ -36,6 +36,12 @@ public class BuyButron : ButtonBase
                 break;
             case 1:
                 GameMechanics.BuyItemChecking(listItem, "BoostTime");
+                break;
+            case 11:
+                GameMechanics.BuyItemChecking(listItem, "Active_Hammer");
+                break; 
+            case 12:
+                GameMechanics.BuyItemChecking(listItem, "Active_Shuffle");
                 break;
 
         }

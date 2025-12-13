@@ -128,19 +128,23 @@ public class IteminventoryManager
             invetory[nameItem].QuatityItem--;
             if (invetory[nameItem].QuatityItem <= 0) invetory.Remove(nameItem);
             SaveInventory(invetory);
-           
+
             // ham thu hien boost cho game
-            OnItemUsed?.Invoke(invetory[nameItem].TypeItem,nameItem);
+            // OnItemUsed?.Invoke(invetory[nameItem].TypeItem,nameItem);
+            BoostItemManager.HanldeItemUsed(invetory[nameItem].TypeItem, nameItem);
 
         }
     }
+
+
+   
 
     public static int GetItemCount(string nameItem)
     {
         Dictionary<string, ItemInfo> invetory = Loadinventory(); // load các item đã lưu
         if (invetory.ContainsKey(nameItem))
         {
-            Debug.Log("hien thi "+ invetory[nameItem].QuatityItem );
+          
             return invetory[nameItem].QuatityItem; // trả về số lượng đố
         }
         return 0;
