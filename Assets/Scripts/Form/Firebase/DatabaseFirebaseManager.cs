@@ -272,14 +272,19 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
     public void UpLoadCoinAndScore(int newCoin, int newScore)
     {
 
+        if (UserFound == null)
+        {
+            Debug.LogError("UserFound là NULL! Không có current user.");
+            return;
+        }
         DataUser currentUser = UserFound;
-       
+
         if (currentUser != null)
         {
             currentUser.z_coin = newCoin;
             currentUser.z_highScore = newScore;
 
-            Debug.Log("hien thi ra user cập nhật " + currentUser.id +currentUser.z_highScore);
+            Debug.Log("hien thi ra user cập nhật " + currentUser.id + currentUser.z_highScore);
             if (GameMechanics.CheckInernet()) //ghi đè dữ liệu Coin và Score trên Firebase
                 WriteDataOption(currentUser);
             else
@@ -289,17 +294,18 @@ public class DatabaseFirebaseManager : SingletonBase<DatabaseFirebaseManager>
 
                 // Tìm index của người dùng hiện tại trong danh sách
                 int index = users.user.FindIndex(u => u.id == currentUser.id);
-                
-                if(index != -1)
+
+                if (index != -1)
                 {
                     // Ghi đè người dùng đã cập nhật
                     users.user[index] = currentUser;
                     users.SaveData(users);
-                   
+
                 }
             }
         }
-      //  else { Debug.LogWarning("chưa thấy current user để cập nhật " + currentUser); }
+
+        else { Debug.LogWarning("chưa thấy current user để cập nhật "+(currentUser!=null?currentUser.id:"null")); }
     }
 
 }

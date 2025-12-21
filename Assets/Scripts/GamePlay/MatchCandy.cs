@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public static class MatchCandy
@@ -26,10 +27,10 @@ public static class MatchCandy
     private static IEnumerator RefillAffterDelay(CandyVisual[,] candies, GridManager grid, GameObject[] candyPrefabs, float localSize)
     {
         yield return new WaitForSeconds(0.5f);
-        MatchCandy.CollapseColumn(candies, grid);
-        MatchCandy.Refill(grid, candies, candyPrefabs, localSize);
+        CollapseColumn(candies, grid);
+        Refill(grid, candies, candyPrefabs, localSize);
         yield return new WaitForSeconds(0.3f);
-        MatchCandy.MatchAllCandy(candies, grid, candyPrefabs);
+        MatchAllCandy(candies, grid, candyPrefabs);
 
     }
 
@@ -44,7 +45,7 @@ public static class MatchCandy
             {
                 CandyVisual candy = candies[x, y];
                 if (candy == null) continue;
-                HashSet<CandyVisual> match = MatchCandy.FindAllMacth(candies, grid.Width, grid.Height, x, y);
+                HashSet<CandyVisual> match = FindAllMacth(candies, grid.Width, grid.Height, x, y);
                 allMatches.UnionWith(match);
             }
         }
@@ -205,4 +206,72 @@ public static class MatchCandy
         }
     }
 
+
+    //Nếu CheckValidMatch của bạn làm nhiệm vụ của CheckForImmediateMatches (tìm match 3 hiện tại): Mã của bạn là đúng.
+    public static bool CheckValidMatch(GridManager grid, CandyVisual[,] candies)
+    {
+        for (int row = 0; row < grid.Width; row++)
+        {
+            for (int col = 0; col < grid.Height; col++)
+            {
+                HashSet<CandyVisual> matchCandy = FindAllMacth(candies, grid.Width, grid.Height, row, col);
+                if (matchCandy.Count >= 3)
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    public static bool CheckValidMovePossible(GridManager grid, CandyVisual[,] candies)
+    {
+        // Lặp qua tất cả các ô trong lưới
+        for (int row = 0; row < grid.Width; row++)
+        {
+            for (int col = 0; col < grid.Height; col++)
+            {
+                if (candies[row, col] == null) continue;
+
+                // kiem tra hoán đổi bên phải
+                if (col < grid.Height - 1 && candies[row, col + 1] != null && CheckSwapMove(candies, row, col, row, col + 1)) return true;
+
+                // kiểm tra  hoán đổi bên dưới
+                if (row < grid.Width -1 && candies[row + 1, col] !=null && CheckSwapMove(candies, row, col, row + 1, col)) return true;
+            }
+        }
+        return false;
+    }
+
+    // Hàm phụ trợ rút gọn: Hoán đổi tạm thời, kiểm tra, và hoàn tác
+    private static bool CheckSwapMove(CandyVisual[,] candies, int row1, int col1, int row2, int col2)
+    {
+        (candies[row1, col1], candies[row2, col2]) = (candies[row2, col2], candies[row1, col1]); //hoán đổi tạm thời
+
+        bool matchFound = MatchCount(candies, row1, col1) >=3 || MatchCount(candies, row2, col2) >= 3; //kiêm tra vị trí 2 viên kẹo
+
+        (candies[row1, col1], candies[row2, col2]) = (candies[row2, col2], candies[row1, col1]); //hoán đổi lại ngược lại
+
+        return matchFound;
+    }
+
+    private static int MatchCount(CandyVisual[,] candies, int row, int col)
+    {
+        return FindAllMacth(candies,candies.GetLength(0),candies.GetLength(1),row,col).Count;
+    }
+
+
+   // thục hien xóa hang khi clikc vào candy 
+   public static void ClearRow(CandyVisual[,] candies, GridManager grid, int currentRow, GameObject[] candyPrefabs)
+    {
+        for (int col = 0; col < candies.GetLength(0); col++)
+        {
+            CandyVisual candy = candies[currentRow, col]; // cho  gắn từng obj cho candy
+            if (candy == null) return;
+
+            Object.Destroy(candy.gameObject); //thực hiện xóa
+
+            candies[currentRow, col] = null; 
+
+            grid.StartCoroutine(RefillAffterDelay(candies, grid, candyPrefabs, grid.LocalSize)); //lấp đầy bảng
+        }
+    }
 }

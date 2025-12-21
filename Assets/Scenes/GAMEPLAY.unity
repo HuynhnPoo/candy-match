@@ -524,7 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594d9d2a30cc8dd468d104053f1c3bd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameItem: Active_Shuffle
+  nameItem: BoostActiveShuffle
 --- !u!1 &132137806
 GameObject:
   m_ObjectHideFlags: 0
@@ -2362,6 +2362,7 @@ GameObject:
   - component: {fileID: 772431679}
   - component: {fileID: 772431681}
   - component: {fileID: 772431680}
+  - component: {fileID: 772431682}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -2485,6 +2486,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 772431678}
   m_CullTransparentMesh: 1
+--- !u!114 &772431682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 772431678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afbe50b529016c740bfb6afead0da2de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  nameItem: BoostActiveHammer
 --- !u!1 &916226311
 GameObject:
   m_ObjectHideFlags: 0
@@ -3222,7 +3237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 594d9d2a30cc8dd468d104053f1c3bd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nameItem: Active_Hammer
+  nameItem: BoostActiveHammer
 --- !u!1 &1227134161
 GameObject:
   m_ObjectHideFlags: 0
@@ -4262,7 +4277,7 @@ GameObject:
   - component: {fileID: 1564431002}
   m_Layer: 0
   m_Name: board
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5419,6 +5434,7 @@ GameObject:
   - component: {fileID: 1943302795}
   - component: {fileID: 1943302797}
   - component: {fileID: 1943302796}
+  - component: {fileID: 1943302798}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -5542,6 +5558,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1943302794}
   m_CullTransparentMesh: 1
+--- !u!114 &1943302798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943302794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afbe50b529016c740bfb6afead0da2de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  nameItem: BoostActiveShuffle
 --- !u!1 &2109208771
 GameObject:
   m_ObjectHideFlags: 0

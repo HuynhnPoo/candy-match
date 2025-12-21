@@ -14,7 +14,7 @@ public static class BoostItemManager
                 break;
             case TypeItem.ACTIVE:
                 Debug.Log("hien thuc hien active");
-                // actice dang có aaaa nên chưa dung hammer được chú ý
+               
                 GameManager.Instance.OnboostGame?.Invoke(nameItem);
                 break;
             default:
@@ -42,23 +42,32 @@ public static class BoostItemManager
 
 
     //============================
-    public static void InitializeACtive() 
+    public static void InitializeActive() 
     {
 
         GameManager.Instance.OnboostGame = ActiveHamer;
         GameManager.Instance.OnboostGame += ActiveShuffle;
     }
 
-  static  void ActiveHamer(string nameItem)
+  static void ActiveHamer(string nameItem)
     {
         Debug.Log(nameItem);
         if (nameItem == "BoostActiveHammer")
-            Debug.Log("hien thi ra thoi gian su dung bua");
+        {
+
+            Debug.Log("hien thi ra xoa hang candy");
+            GameManager.Instance.IsClearCandy = true;
+        }
     }
 
    static void ActiveShuffle(string nameItem)
     {
+        Debug.Log(nameItem);
         if (nameItem == "BoostActiveShuffle")
-            Debug.Log("hien thi ra thoi gian su dung bua");
+        {
+
+            Debug.Log("hien thi ra hoan doi candy ");
+            GameManager.Instance.ShuffleCandyBoost();
+        }
     }
 }

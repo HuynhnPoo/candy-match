@@ -3,7 +3,7 @@ using Unity.Services.LevelPlay;
 using UnityEngine;
 
 // This sample demonstrates how to use the LevelPlay SDK to load and show ads in a Unity game.
-public class LevelPlaySample : MonoBehaviour
+public class LevelPlaySample : SingletonBase<LevelPlaySample>
 {
     [SerializeField]
     private Texture2D lpLogo;
@@ -15,15 +15,15 @@ public class LevelPlaySample : MonoBehaviour
     bool isAdsEnabled = false;
     bool isBanner = false;
 
-    [SerializeField]
-    private TextMeshProUGUI text;
-    [SerializeField]
-    private TextMeshProUGUI text2;
-    [SerializeField]
-    private TextMeshProUGUI text3;
+    //[SerializeField]
+    //private TextMeshProUGUI text;
+    //[SerializeField]
+    //private TextMeshProUGUI text2;
+    //[SerializeField]
+    //private TextMeshProUGUI text3;
     
-    [SerializeField]
-    private TextMeshProUGUI text4;
+    //[SerializeField]
+    //private TextMeshProUGUI text4;
 
     public void Start()
     {
@@ -96,7 +96,7 @@ public class LevelPlaySample : MonoBehaviour
         // LoadBannerAD();
         LoadIntersitialAD();
         LoadRewardedAD();
-        text2.SetText($"hien ra Init OK.{config.IsAdQualityEnabled}");
+       // text2.SetText($"hien ra Init OK.{config.IsAdQualityEnabled}");
     }
 
     public void LoadIntersitialAD()
@@ -171,7 +171,7 @@ public class LevelPlaySample : MonoBehaviour
     {
         Debug.Log($"[LevelPlaySample] Received SdkInitializationFailedEvent with Error: {error}");
 
-        text3.SetText(error.ToString() + " " + error.ErrorCode + " "+error.ErrorMessage);
+      //  text3.SetText(error.ToString() + " " + error.ErrorCode + " "+error.ErrorMessage);
 
 
     }
@@ -179,8 +179,8 @@ public class LevelPlaySample : MonoBehaviour
     void RewardedVideoOnLoadedEvent(LevelPlayAdInfo adInfo)
     {
         Debug.Log($"[LevelPlaySample] Received RewardedVideoOnLoadedEvent With AdInfo: {adInfo}");
-        if (text != null)
-            text.text += $"\nRewarded Ready từ {adInfo.AdUnitName} {adInfo.InstanceName} {adInfo.AdUnitId}!";
+        //if (text != null)
+        //    text.text += $"\nRewarded Ready từ {adInfo.AdUnitName} {adInfo.InstanceName} {adInfo.AdUnitId}!";
     }
 
     void RewardedVideoOnAdLoadFailedEvent(LevelPlayAdError error)
@@ -203,7 +203,13 @@ public class LevelPlaySample : MonoBehaviour
     void RewardedVideoOnAdRewardedEvent(LevelPlayAdInfo adInfo, LevelPlayReward reward)
     {
         Debug.Log($"[LevelPlaySample] Received RewardedVideoOnAdRewardedEvent With AdInfo: {adInfo} and Reward: {reward}");
-        text4.SetText("qua tang la"+ reward.Name +" "+reward.Amount);
+        //text4.SetText("qua tang la"+ reward.Name +" "+reward.Amount);
+        Debug.Log("them gia tri coin" + reward.Name+" "+ reward.Amount);
+        GameManager.Instance.Coin += reward.Amount;
+        //PlayerPrefs.SetInt(StringManager.coinSaveStr, GameManager.Instance.Coin);
+
+        //PlayerPrefs.Save();
+        //GameManager.Instance.Coin = PlayerPrefs.GetInt(StringManager.coinSaveStr);
     }
 
     void RewardedVideoOnAdClickedEvent(LevelPlayAdInfo adInfo)
@@ -225,9 +231,9 @@ public class LevelPlaySample : MonoBehaviour
     void InterstitialOnAdLoadedEvent(LevelPlayAdInfo adInfo)
     {
         Debug.Log($"[LevelPlaySample] Received InterstitialOnAdLoadedEvent With AdInfo: {adInfo}");
-        if (text != null)
+        //if (text != null)
 
-            text.text += $"inetrsitial Ready từ {adInfo.AdUnitName} {adInfo.InstanceName} {adInfo.AdUnitId}!";
+        //    text.text += $"inetrsitial Ready từ {adInfo.AdUnitName} {adInfo.InstanceName} {adInfo.AdUnitId}!";
     }
 
     void InterstitialOnAdLoadFailedEvent(LevelPlayAdError error)
@@ -267,8 +273,8 @@ public class LevelPlaySample : MonoBehaviour
     {
 
         Debug.Log($"[LevelPlaySample] Received BannerOnAdLoadedEvent With AdInfo: {adInfo}");
-        if (text != null)
-            text.text += $"Banner Ready từ {adInfo.AdUnitName} {adInfo.InstanceName} {adInfo.AdUnitId}!";
+        //if (text != null)
+        //    text.text += $"Banner Ready từ {adInfo.AdUnitName} {adInfo.InstanceName} {adInfo.AdUnitId}!";
     }
 
     void BannerOnAdLoadFailedEvent(LevelPlayAdError error)

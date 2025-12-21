@@ -18,6 +18,7 @@ public class UIManager : SingletonBase<UIManager>
     public GameObject gameoverPn { get; private set; }
     [SerializeField] private GameObject canvasFade;
 
+
     // game obj main menu
     public GameObject shopCanvas { get; private set; }
     public int QuatityItem { set; get; }
@@ -45,10 +46,10 @@ public class UIManager : SingletonBase<UIManager>
     protected void Update()
     {
 
-        if (Input.GetKeyDown(KeyCode.S))
+     /*   if (Input.GetKeyDown(KeyCode.S))
         {
             Debug.Log(GameManager.Instance.CoinDown + " " + GameManager.Instance.ScoreDown);
-        }
+        }*/
     }
 
     private void Init()
@@ -68,6 +69,7 @@ public class UIManager : SingletonBase<UIManager>
         {
             this.gameoverPn = FindGameObjectByNameHide.FindGameObjectByName(StringManager.gameOverPn);
             this.pausePn = FindGameObjectByNameHide.FindGameObjectByName(StringManager.pausePn);
+
         }
         else if (SceneManager.GetActiveScene().name == SceneType.MAINMENU.ToString())
         {

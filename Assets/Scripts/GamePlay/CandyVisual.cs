@@ -48,6 +48,17 @@ public class CandyVisual : MonoBehaviour
         this.colum = colum;
     }
 
+    public void SetTypeCandy(CandyTypeList newType)
+    {
+        if (type == newType)
+        {
+            type = newType;
+            gameObject.name = newType.ToString();
+
+            CandyName.LoadName(newType.ToString(), this);
+        }
+    }
+
     private void OnEnable()
     {
         CandyName.LoadName(this.transform.name.Replace("(Clone)", ""), this);
@@ -76,24 +87,34 @@ public class CandyVisual : MonoBehaviour
 
     private void OnMouseDown()
     {
-
-        startPos = Input.mousePosition;
-
+        startPos = Input.mousePosition; //lấy tọa độ đàu tiên khi click chuột
+       
+        if (GameManager.Instance.IsClearCandy) // laasy tọa độ khi boost thực hiện
+        {
+            grid.ActiveClearRow(this.row);
+            GameManager.Instance.IsClearCandy = false;
+        }
     }
 
     private void OnMouseUp()
     {
-        endPos = Input.mousePosition;
-        Vector2 swipe = endPos - startPos;
-        if (swipe.magnitude < swipeDistance)
+        if (!GameManager.Instance.IsClearCandy)
         {
-            this.grid.SelectCandy(this.row, this.colum);
+            endPos = Input.mousePosition;
+            Vector2 swipe = endPos - startPos;
 
+            if (swipe.magnitude < swipeDistance)
+            {
+                this.grid.SelectCandy(this.row, this.colum);
+
+            }
+            else
+            {
+                DetectSwipeDirection(swipe);
+            }
+          
         }
-        else
-        {
-            DetectSwipeDirection(swipe);
-        }
+        
     }
 
     void DetectSwipeDirection(Vector2 swipe)

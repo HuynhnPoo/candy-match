@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Hammer_Boost
   m_EditorClassIdentifier: 
   typeItem: 2
-  nameItem: Active_Hammer
+  nameItem: BoostActiveHammer
   priceItem: 0
   valueBoostItem: 0
-  quatityItem: 3
+  quatityItem: 5
   maxQuatityItem: 50

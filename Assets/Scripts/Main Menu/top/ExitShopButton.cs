@@ -6,7 +6,7 @@ public class ExitShopButton : ButtonBase
 {
     public override void OnClick()
     {
-        DatabaseFirebaseManager.Instance.UpLoadCoinAndScore(GameManager.Instance.Coin,GameManager.Instance.HighScore);
+        DatabaseFirebaseManager.Instance?.UpLoadCoinAndScore(GameManager.Instance.Coin,GameManager.Instance.HighScore);
 
         UIManager.Instance.shopCanvas.SetActive(false);
     }

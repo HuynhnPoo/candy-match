@@ -7,6 +7,7 @@ public class ActiveBoostBtn : ButtonBase
     [SerializeField] private string nameItem; 
     public override void OnClick()
     {
-      IteminventoryManager.UseItem(nameItem);
+        BoostItemManager.InitializeActive();
+        IteminventoryManager.UseItem(nameItem);
     }
 }

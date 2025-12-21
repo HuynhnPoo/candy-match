@@ -40,16 +40,18 @@ public class Test : MonoBehaviour
         if (Input.GetKeyUp(KeyCode.A))
         {
 
-           /* 
-            IteminventoryManager.UseItem("BoostActiveHammer");*/
-            DatabaseFirebaseManager.Instance.UpLoadCoinAndScore(GameManager.Instance.Coin, GameManager.Instance.HighScore);
+            /* 
+             IteminventoryManager.UseItem("BoostActiveHammer");*/
+            // DatabaseFirebaseManager.Instance.UpLoadCoinAndScore(GameManager.Instance.Coin, GameManager.Instance.HighScore);
 
-           /* PlayerPrefs.DeleteKey(StringManager.coinSaveStr);
-            PlayerPrefs.DeleteKey(StringManager.highScoreStr);*/
+            /* PlayerPrefs.DeleteKey(StringManager.coinSaveStr);
+             PlayerPrefs.DeleteKey(StringManager.highScoreStr);*/
+
+            // IteminventoryManager.PrintInventory();
 
         }
 
-     
+
 
         if (Input.GetKeyUp(KeyCode.B))
         {

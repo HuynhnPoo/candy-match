@@ -26,7 +26,8 @@ public class Iteminventory
 
 public class IteminventoryManager
 {
-    public static event Action<TypeItem,string> OnItemUsed;
+
+    
     public static void PrintInventory()
     {
         // 1. Tải Inventory hiện tại vào Dictionary
@@ -126,13 +127,13 @@ public class IteminventoryManager
             ItemInfo itemInfo = invetory[nameItem];
 
             invetory[nameItem].QuatityItem--;
-            if (invetory[nameItem].QuatityItem <= 0) invetory.Remove(nameItem);
-            SaveInventory(invetory);
+            Debug.Log("hien thi "+ invetory[nameItem].QuatityItem);
 
             // ham thu hien boost cho game
-            // OnItemUsed?.Invoke(invetory[nameItem].TypeItem,nameItem);
             BoostItemManager.HanldeItemUsed(invetory[nameItem].TypeItem, nameItem);
 
+            if (invetory[nameItem].QuatityItem <= 0) invetory.Remove(nameItem);
+            SaveInventory(invetory);
         }
     }
 

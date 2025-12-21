@@ -1,5 +1,8 @@
-﻿using System;
+﻿using JetBrains.Annotations;
+using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using static UIManager;
 
 public class GameManager : SingletonBase<GameManager>
 {
@@ -7,7 +10,8 @@ public class GameManager : SingletonBase<GameManager>
     public bool IsPaused { get => isPaused; set => isPaused = value; }
 
     public bool IsGameOver { set; get; } = false;
-    public bool IsWinGame { set; get; } = false;
+    public bool IsWinGame { set; get; } = false; 
+    public bool IsClearCandy { set; get; } = false;
 
     bool hasEndGame = false;
     private int score = 0;
@@ -32,6 +36,33 @@ public class GameManager : SingletonBase<GameManager>
 
     public event Action OnGameOver;
     public Action<string> OnboostGame;
+
+    [SerializeField] private GridManager gridManager;
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadScene)
+    {
+        if (scene.name != "BOOTSTRAP")
+        {
+            if (SceneManager.GetActiveScene().name == SceneType.GAMEPLAY.ToString())
+            {
+                this.gridManager = GameObject.FindGameObjectWithTag("GameController").GetComponent<GridManager>();
+
+            }
+          else this.gridManager = null;
+        }
+
+    }
+
 
     public void Init()
     {
@@ -92,6 +123,11 @@ public class GameManager : SingletonBase<GameManager>
 
         Time.timeScale = 0f;
 
+    }
+
+    public void ShuffleCandyBoost()
+    {
+        StartCoroutine(ShuffleCandy.ShuffleBoard(gridManager,gridManager.visualGrid));
     }
 
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class GridManager : MonoBehaviour, ICompoment
@@ -28,11 +29,13 @@ public class GridManager : MonoBehaviour, ICompoment
     [SerializeField] private GameObject selectPrefabs;
     [SerializeField] private GameObject blockedCellPrefab;
 
-    private CandyVisual[,] visualGrid;
+    public CandyVisual[,] visualGrid { set; get; }
+
 
     public Board board { set; get; }
 
     private LevelManager levelManager;
+
 
     private void OnEnable()
     {
@@ -79,7 +82,16 @@ public class GridManager : MonoBehaviour, ICompoment
             this.transform.position = new Vector3(-2.15f, -3.15f, 0);
             levelManager.LoadNewLevelData(1);
             LoadAndInstantiateGrid();
-        };
+        } 
+        
+        
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            //
+        } 
+        
+       
+
     }
 
     void ClearGrid()
@@ -92,6 +104,7 @@ public class GridManager : MonoBehaviour, ICompoment
     {
         this.levelLayout = layout;
     }
+
     public void LoadAndInstantiateGrid()
     {
         ClearGrid();
@@ -154,7 +167,6 @@ public class GridManager : MonoBehaviour, ICompoment
 
         Debug.Log("✅ Grid instantiated successfully!");
     }
-    // xoa tat car cac con 
 
     void HidePreviousSelection()
     {
@@ -171,7 +183,7 @@ public class GridManager : MonoBehaviour, ICompoment
         }
     }
 
-    public void SelectCandy(int x, int y)
+    public void SelectCandy(int x, int y) // chọn candy
     {
         if (selectCandy == null)
         {
@@ -213,7 +225,7 @@ public class GridManager : MonoBehaviour, ICompoment
         int newCol = col + direction.y;
 
         board.Swap(visualGrid, this, row, col, newRow, newCol);
-        HidePreviousSelection();
+        HidePreviousSelection(); 
         selectCandy = null;
 
         GameManager.Instance.MoveStep--;
@@ -236,4 +248,9 @@ public class GridManager : MonoBehaviour, ICompoment
         }
         return false;
     }
-}
+
+    public void ActiveClearRow(int posCandy)
+    {
+        MatchCandy.ClearRow(visualGrid,this,posCandy,candyPrefabs);
+    }
+ }
