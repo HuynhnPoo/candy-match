@@ -4,18 +4,22 @@ using UnityEngine;
 
 public static class GameMechanics
 {
-    private static int score = 0;
-
-    private static float time = 30;
     private static bool timeUp = false;
+
+    private static float time;
     static float scoreMultiles = 0.1f;
+
+    private static int score = 0;
     static int bonusRewads = 5;
-    public static void Init()
+    static int bonusRewadsUseBoost;
+    public static void Init(float addTime , int addfloatbonusRewadsUseBoost )
     {
         score = 0;
-        time = 30;
+        time = addTime;   
         timeUp = false;
+        bonusRewadsUseBoost = addfloatbonusRewadsUseBoost;
     }
+
 
     public static void AddScore(int amout)
     {
@@ -63,7 +67,7 @@ public static class GameMechanics
     // ham tinh tinh toan gia trij kiem tien
     public static void CalculateMoney(int score, int time, int stepMove)
     {
-        int coinEarned = (score * (int)scoreMultiles) + (time * bonusRewads) + (stepMove * bonusRewads);
+        int coinEarned = ((score * (int)scoreMultiles) + (time * bonusRewads) + (stepMove * bonusRewads))*bonusRewadsUseBoost;
 
         GameManager.Instance.Coin = coinEarned;
 

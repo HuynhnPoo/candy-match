@@ -6,6 +6,7 @@ public class CandyVisual : MonoBehaviour
 
     private Vector3 targetPos;
     private float speed = 5f;
+   
     private int row = 0;
     public int Row => row;
     private int colum = 0;

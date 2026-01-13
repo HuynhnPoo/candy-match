@@ -131,9 +131,9 @@ public class UIManager : SingletonBase<UIManager>
 
     IEnumerator ShowNotificationCorutine() 
     {
-        shopCanvas.transform.GetChild(2).gameObject.SetActive(true);
+        shopCanvas.transform.GetChild(0).GetChild(5).gameObject.SetActive(true);
         yield return new WaitForSeconds(1);
-        shopCanvas.transform.GetChild(2).gameObject.SetActive(false);
+        shopCanvas.transform.GetChild(0).GetChild(5).gameObject.SetActive(false);
     }
     
 

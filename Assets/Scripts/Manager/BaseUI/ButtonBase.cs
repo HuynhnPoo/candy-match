@@ -33,8 +33,10 @@ public abstract class ButtonBase : MonoBehaviour, ICompoment
     }
     public virtual void AddEventListener()
     {
-       
-        this.button.onClick.AddListener(this.OnClick);
+
+        this.button.onClick.AddListener(() => {
+            SoundManager.Instance.PlaySfx("Click_Button");
+            this.OnClick(); });
     }
     public abstract void OnClick();
 

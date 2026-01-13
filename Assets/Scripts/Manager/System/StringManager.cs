@@ -22,20 +22,26 @@ public static class StringManager
 
     //scene gameplay
 
-    public static readonly string gameOverPn = "GameOver_Panel";
+    public static readonly string gameOverPn = "GameResult_Panel";
     public static readonly string pausePn = "Pause_Panel";
 
     // save playfrep
 
     public static readonly string coinSaveStr = "CoinSave";
     public static readonly string highScoreStr = "HighScore";
+    
+    public static readonly string musicSave = "MusicSave";
+    public static readonly string sfxSave = "SFXSave";
+
+
 
     // boost game
 
     public static readonly string[] itemBoosts =
     {
         "BoostTurn",
-        "BoostTime"
+        "BoostTime",
+        "BoostGold"
     };
 
    

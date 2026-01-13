@@ -61,10 +61,11 @@ public class GridManager : MonoBehaviour, ICompoment
         }
         else
         {
-            this.cellSize = (int)0.4f;
-            this.spacing = 0.6f;
-            this.localSize = 0.3f;
-          
+            this.cellSize = (int)0.4f; //
+            this.spacing = 0.6f;// khaonrg cach
+            this.localSize = 0.3f;// độ lớn
+            this.transform.position = new Vector3(-2.15f, -3.15f, 0);// vị trí
+
             levelManager.LoadNewLevelData(GameManager.Instance.CurrentLevel);
             LoadAndInstantiateGrid();
         }
@@ -73,7 +74,7 @@ public class GridManager : MonoBehaviour, ICompoment
     // Update is called once per frame
     void Update()
     {
-          if (Input.GetKeyDown(KeyCode.Z))
+         /* if (Input.GetKeyDown(KeyCode.Z))
         {
 
             this.cellSize = (int)0.4f;
@@ -82,7 +83,7 @@ public class GridManager : MonoBehaviour, ICompoment
             this.transform.position = new Vector3(-2.15f, -3.15f, 0);
             levelManager.LoadNewLevelData(1);
             LoadAndInstantiateGrid();
-        } 
+        } */
         
         
         if (Input.GetKeyDown(KeyCode.S))

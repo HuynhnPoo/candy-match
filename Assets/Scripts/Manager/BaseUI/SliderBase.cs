@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public abstract class SliderBase : MonoBehaviour
@@ -8,11 +8,12 @@ public abstract class SliderBase : MonoBehaviour
     protected virtual void Start()
     {
         if (slider == null) slider = GetComponent<Slider>();
+        this.AddChangedEvent();  
     }
 
     protected virtual void AddChangedEvent()
     {
-        this.slider.onValueChanged.AddListener(this.OnChange);
+        this.slider.onValueChanged.AddListener(this.OnChange);// thực hien các logic khi thay đổi sliders
     }
 
     protected abstract void OnChange(float amount);

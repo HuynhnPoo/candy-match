@@ -23,13 +23,15 @@ public class GameManager : SingletonBase<GameManager>
     public int TotalCoin { set; get; } = 0;
     public int CoinDown { set; get; } = 0;
     public int ScoreDown { set; get; } = 1;
+    public int increaseGoldBoost { set; get; } = 1;
 
-    private static int moveStep = 25;
+    private static int moveStep=25;
     public int MoveStep { set => moveStep = value; get => moveStep; }
 
     private static int currentLevel;
     public int CurrentLevel { set => currentLevel = value; get => currentLevel; }
     public string NameUserLogin { set; get; } = "";
+    public float time { set; get; } = 30;
 
     public string Notification { get; set; } = "null";
     public string StatusGameStr { get; set; } = "null";
@@ -41,6 +43,7 @@ public class GameManager : SingletonBase<GameManager>
 
     private void OnEnable()
     {
+        //Coin = 10000;
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -66,11 +69,13 @@ public class GameManager : SingletonBase<GameManager>
 
     public void Init()
     {
-        GameMechanics.Init();
         score = 0;
         hasEndGame = false;
         IsWinGame = false;
         IsGameOver = false;
+
+        Debug.Log("hien thi ra"+time +" "+increaseGoldBoost+" "+moveStep);
+        GameMechanics.Init(time, increaseGoldBoost);
         OnGameOver = GameOver;
 
     }
@@ -115,6 +120,7 @@ public class GameManager : SingletonBase<GameManager>
         else if (IsWinGame)
         {
             StatusGameStr = "Win Game";
+            UIManager.Instance.gameoverPn.transform.GetChild(2).gameObject.SetActive(true);
         }
 
         GameMechanics.CalculateMoney(score, (int)GameMechanics.CountDown(), moveStep);

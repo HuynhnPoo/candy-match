@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   typeItem: 1
   nameItem: BoostTime
-  priceItem: 2
+  priceItem: 0
   valueBoostItem: 0
   quatityItem: 10
   maxQuatityItem: 50

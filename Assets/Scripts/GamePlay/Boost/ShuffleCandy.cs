@@ -52,7 +52,6 @@ public class ShuffleCandy
                 }
             }
         }
-
     }
 
     public static IEnumerator ShuffleBoard(GridManager grid, CandyVisual[,] candies, int attempt = 0)

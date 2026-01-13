@@ -35,6 +35,9 @@ public class BuyButron : ButtonBase
                 break;
             case 1:
                 GameMechanics.BuyItemChecking(listItem, "BoostTime");
+                break; 
+            case 2:
+                GameMechanics.BuyItemChecking(listItem, "BoostGold");
                 break;
             case 11:
                 GameMechanics.BuyItemChecking(listItem, "BoostActiveHammer");

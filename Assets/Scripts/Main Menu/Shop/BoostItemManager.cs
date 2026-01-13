@@ -32,12 +32,20 @@ public static class BoostItemManager
    static  void IncreaseTurn(string nameItem)
     {
         if (nameItem == StringManager.itemBoosts[0])// 0 đại dienj cho tăng lượt di chuyển
-            Debug.Log("thuc hien tang luowtj di chuyen");
+            GameManager.Instance.MoveStep = 30;
+          //  Debug.Log("thuc hien tang luowtj di chuyen");
     }
     static void IncreaseTime(string nameItem)
     {
         if (nameItem == StringManager.itemBoosts[1]) // 1 đại diện ttang thoi gian troi
-            Debug.Log("thuc hien tang thời gian chơi");
+            GameManager.Instance.time = 30;
+        Debug.Log("thuc hien tang thời gian chơi");
+    }
+    static void IncreaseGold(string nameItem)
+    {
+        if (nameItem == StringManager.itemBoosts[2]) // 2 tang van
+            GameManager.Instance.increaseGoldBoost = 2;
+        Debug.Log("thuc hien tang vang");
     }
 
 
@@ -68,6 +76,17 @@ public static class BoostItemManager
 
             Debug.Log("hien thi ra hoan doi candy ");
             GameManager.Instance.ShuffleCandyBoost();
+        }
+    }
+
+    static void ActiveSwapCollor(string nameItem) //dôi màu mà mình chọn thì sao
+    {
+        Debug.Log(nameItem);
+        if (nameItem == "BoostActiveSwapColor")
+        {
+
+            Debug.Log("hien thi ra hoan doi color ");
+          //  GameManager.Instance.ShuffleCandyBoost();
         }
     }
 }
