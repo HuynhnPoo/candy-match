@@ -28,6 +28,12 @@ public class MusicSlider : SliderBase
     // Update is called once per frame
     void Update()
     {
-        if (SoundManager.Instance.IsResseted) { Debug.Log("hien thi ra ten " + transform.name); }
+        if (SoundManager.Instance.IsResseted) 
+        {
+            slider.value = SoundManager.Instance.SetMusicGame(0.7f); //set laij gias tri cho slider và am thanh
+            PlayerPrefs.SetFloat (StringManager.musicSave, currentVolume);
+
+           //SoundManager.Instance.IsResseted = false;    
+        }
     }
 }

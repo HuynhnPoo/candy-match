@@ -226,7 +226,7 @@ public class GridManager : MonoBehaviour, ICompoment
         int newCol = col + direction.y;
 
         board.Swap(visualGrid, this, row, col, newRow, newCol);
-        HidePreviousSelection(); 
+        HidePreviousSelection(); // tắt gameobject đã chọn
         selectCandy = null;
 
         GameManager.Instance.MoveStep--;

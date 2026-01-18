@@ -10,17 +10,18 @@ public static class MatchCandy
     {
         foreach (CandyVisual candy in candies)
         {
+            if (candy == null) continue;
             int row = candy.Row;
             int col = candy.Colum;
 
             candyVisuals[row, col] = null;  // clear trong grid 
 
 
+            candy.DestroyCandy(); // tạo hiệu úng nổ
             Object.Destroy(candy.gameObject);// xóa object
 
-
-            grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid, candyPrefabs, grid.LocalSize)); //sau khi xoa sẽ thực hiện tạo và lấy đày
         }
+            grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid, candyPrefabs, grid.LocalSize)); //sau khi xoa sẽ thực hiện tạo và lấy đày
     }
 
 

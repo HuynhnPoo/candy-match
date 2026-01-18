@@ -98,7 +98,7 @@ public class SoundManager : SingletonBase<SoundManager>
 
     public void ResetMusicAll()
     {
-      //  PlaySfx(.buttonClick);
+        //PlaySfx("");
         isResseted = true;
 
         PlayerPrefs.DeleteKey(StringManager.musicSave);

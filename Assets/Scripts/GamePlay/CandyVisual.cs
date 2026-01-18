@@ -4,7 +4,6 @@ using static CandyType;
 public class CandyVisual : MonoBehaviour
 {
 
-    private Vector3 targetPos;
     private float speed = 5f;
    
     private int row = 0;
@@ -17,8 +16,11 @@ public class CandyVisual : MonoBehaviour
 
     private CandyTypeList type;
 
+    private Vector3 targetPos;
     Vector3 startPos;
     Vector3 endPos;
+
+    [SerializeField] private GameObject destroyEffectPT;
 
     int swipeDistance = 20;
 
@@ -145,5 +147,11 @@ public class CandyVisual : MonoBehaviour
         }
     }
 
+   public void DestroyCandy()
+    {
+       
+        GameObject obj = Instantiate(destroyEffectPT,this.targetPos, Quaternion.identity);
+        Destroy(obj,1f);   
+    }
 
 }

@@ -6,17 +6,16 @@ public class SfxSlider : SliderBase
 {
     float currentVolume = 0.7f;
 
-   protected override void Start()
+    protected override void Start()
     {
         base.Start();
 
-        currentVolume = PlayerPrefs.GetFloat(StringManager.sfxSave,0.7f);
+        currentVolume = PlayerPrefs.GetFloat(StringManager.sfxSave, 0.7f);
         slider.value = SoundManager.Instance.SetSFXGame(currentVolume);
     }
 
     protected override void OnChange(float amount)
     {
-        Debug.Log(" thay đổi slider"+ amount); 
 
         currentVolume = SoundManager.Instance.SetSFXGame(amount); // set sfx của game
         slider.value = currentVolume; // gán giá trị cho slider
@@ -26,11 +25,14 @@ public class SfxSlider : SliderBase
 
     private void Update()
     {
-       if(SoundManager.Instance.IsResseted)
+        if (SoundManager.Instance.IsResseted)
         {
-            Debug.Log("hien  thi ra thuwc hienj"+ transform.name);
+            slider.value = SoundManager.Instance.SetSFXGame(0.7f); // set gias tri slider vvà âm thanh
+            PlayerPrefs.SetFloat(StringManager.sfxSave, currentVolume);
+           
+            SoundManager.Instance.IsResseted = false;
         }
-            
+
     }
 
 
