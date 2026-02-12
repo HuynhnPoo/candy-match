@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ public class GridManager : MonoBehaviour, ICompoment
 
     private int cellSize = 1;
     public int CellSize { set => cellSize = value; get => cellSize; }
+
+    int colorBombChanceIndex = 5;
 
     private float spacing = 0.1f;
     public float Spacing { set => spacing = value; get => spacing; }
@@ -30,12 +33,12 @@ public class GridManager : MonoBehaviour, ICompoment
     [SerializeField] private GameObject blockedCellPrefab;
 
     public CandyVisual[,] visualGrid { set; get; }
-
-
     public Board board { set; get; }
 
     private LevelManager levelManager;
 
+    public  Vector2Int lastSwapA;
+    public  Vector2Int lastSwapB;
 
     private void OnEnable()
     {
@@ -74,7 +77,7 @@ public class GridManager : MonoBehaviour, ICompoment
     // Update is called once per frame
     void Update()
     {
-         /* if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z))
         {
 
             this.cellSize = (int)0.4f;
@@ -83,12 +86,12 @@ public class GridManager : MonoBehaviour, ICompoment
             this.transform.position = new Vector3(-2.15f, -3.15f, 0);
             levelManager.LoadNewLevelData(1);
             LoadAndInstantiateGrid();
-        } */
-        
-        
+        }
+
+
         if (Input.GetKeyDown(KeyCode.S))
         {
-            //
+           // Refill();
         } 
         
        
@@ -136,10 +139,22 @@ public class GridManager : MonoBehaviour, ICompoment
                     GameObject bg = Instantiate(backgroundPrefabs, gridPos, Quaternion.identity, transform);
                     bg.transform.localScale = new Vector3((localSize + 0.4f) - 0.2f, (localSize + 0.4f) - 0.2f, 1);
 
+                    int newIndexCandy = 0;
+
+                    if (board.CountCurrentColorBombs(visualGrid,Width,Height) <2  &&  Random.value <0.02f)
+                    {
+                        newIndexCandy = colorBombChanceIndex;
+                    }
+                    else
+                    {
+                        newIndexCandy= board.GetCandy(x, y);
+                    }
+
                     // Spawn candy
-                    int candy = board.GetCandy(x, y);
+                  //  int candy = board.GetCandy(x, y);
+                   // Debug.Log("hien thi canyd"+ candy);
                     Vector3 candyPos = transform.position + new Vector3(pos2D.x, pos2D.y, -1);
-                    GameObject newCandy = Instantiate(candyPrefabs[candy], candyPos, Quaternion.identity, transform);
+                    GameObject newCandy = Instantiate(candyPrefabs[newIndexCandy], candyPos, Quaternion.identity, transform);
 
                     CandyVisual candyVisual = newCandy.GetComponent<CandyVisual>();
                     visualGrid[x, y] = candyVisual;
@@ -169,7 +184,7 @@ public class GridManager : MonoBehaviour, ICompoment
         Debug.Log("✅ Grid instantiated successfully!");
     }
 
-    void HidePreviousSelection()
+    void HidePreviousSelection() //ẩn các objetc đã chọn
     {
         if (selectCandy.HasValue)
         {
@@ -201,6 +216,8 @@ public class GridManager : MonoBehaviour, ICompoment
             {
 
                 board.Swap(visualGrid, this, first.x, first.y, x, y);
+                lastSwapA = new Vector2Int(first.x, first.y);
+                lastSwapB = new Vector2Int(x, y);
 
                 selectCandy = null;
                 GameManager.Instance.MoveStep--;
@@ -226,6 +243,10 @@ public class GridManager : MonoBehaviour, ICompoment
         int newCol = col + direction.y;
 
         board.Swap(visualGrid, this, row, col, newRow, newCol);
+
+        lastSwapA=new Vector2Int(row, col);
+        lastSwapB=new Vector2Int(newRow, newCol);
+
         HidePreviousSelection(); // tắt gameobject đã chọn
         selectCandy = null;
 
@@ -235,6 +256,8 @@ public class GridManager : MonoBehaviour, ICompoment
 
     public bool CheckMatchesForSwap(int rowA, int colA, int rowB, int colB)
     {
+
+   
         HashSet<CandyVisual> matchesA = MatchCandy.FindAllMacth(visualGrid, width, height, rowA, colA);
         HashSet<CandyVisual> matchesB = MatchCandy.FindAllMacth(visualGrid, width, height, rowB, colB);
 

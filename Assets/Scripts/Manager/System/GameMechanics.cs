@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -12,10 +13,10 @@ public static class GameMechanics
     private static int score = 0;
     static int bonusRewads = 5;
     static int bonusRewadsUseBoost;
-    public static void Init(float addTime , int addfloatbonusRewadsUseBoost )
+    public static void Init(float addTime, int addfloatbonusRewadsUseBoost)
     {
         score = 0;
-        time = addTime;   
+        time = addTime;
         timeUp = false;
         bonusRewadsUseBoost = addfloatbonusRewadsUseBoost;
     }
@@ -67,7 +68,7 @@ public static class GameMechanics
     // ham tinh tinh toan gia trij kiem tien
     public static void CalculateMoney(int score, int time, int stepMove)
     {
-        int coinEarned = ((score * (int)scoreMultiles) + (time * bonusRewads) + (stepMove * bonusRewads))*bonusRewadsUseBoost;
+        int coinEarned = ((score * (int)scoreMultiles) + (time * bonusRewads) + (stepMove * bonusRewads)) * bonusRewadsUseBoost;
 
         GameManager.Instance.Coin = coinEarned;
 
@@ -187,5 +188,47 @@ public static class GameMechanics
         }
 
     }
+
+
+    // ham kieem tra theo chieuef dojc color bomb
+    public static void CheckVerticalColorBomb(GridManager gridManager, CandyVisual[,] candies, HashSet<CandyVisual> match, Vector2Int verticalA, Vector2Int verticalB, int height)
+    {
+        int col = verticalA.y;
+
+        int minVertical = Mathf.Min(verticalA.x, verticalB.x) - 1;
+        int maxVertical = Mathf.Max(verticalA.x, verticalB.x) + 1;
+
+
+        if (minVertical >= 0 && candies[minVertical, col] != null)
+            Debug.Log("type cua candy " + candies[minVertical, col].TypeCandy);
+        else if (maxVertical < height && candies[maxVertical, col] != null)
+            Debug.Log("type cua candy " + candies[maxVertical, col].TypeCandy);
+
+    }
+
+    //ham kiểm tra chiều nagng color bomb
+    public static void CheckHorizontalColorBomb(GridManager gridManager, CandyVisual[,] candies, HashSet<CandyVisual> match, Vector2Int horizontalA, Vector2Int horizontalB, int width)
+    {
+        int row = horizontalA.x;
+
+        int minHorizontal = Mathf.Min(horizontalA.x, horizontalB.x) - 1;
+        int maxHorizontal = Mathf.Max(horizontalA.x, horizontalB.x) + 1;
+
+        if (minHorizontal >= 0 && candies[row, minHorizontal])
+        {
+            Debug.Log("hien thi ra type khi match horizontal" + candies[row, minHorizontal].TypeCandy);
+        }
+
+        else if (maxHorizontal < width && candies[row, minHorizontal])
+        {
+            Debug.Log("hien thi ra type khi match horizontal" + candies[row, minHorizontal].TypeCandy);
+        }
+    }
+
+    // thuwjc hien nor theo hình dấu cộng
+    static void ImplementExplorePlus(GridManager gridManager,CandyVisual[,] candies,HashSet<CandyVisual> match,int row,int col,int size) { }
+   
+        
+    
 
 }

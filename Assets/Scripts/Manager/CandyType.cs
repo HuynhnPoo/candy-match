@@ -12,7 +12,7 @@ public class CandyType
         BLUE,
         YELLOW,
         PINK,
-
+        BOMB_CANDY
     }
 }
 
@@ -43,6 +43,10 @@ public static class CandyName
         {
 
             typeCandy.TypeCandy = CandyType.CandyTypeList.PINK;
+        } else if (name.Equals(CandyType.CandyTypeList.BOMB_CANDY.ToString(), StringComparison.OrdinalIgnoreCase))
+        {
+
+            typeCandy.TypeCandy = CandyType.CandyTypeList.BOMB_CANDY;
         }
         else
         {

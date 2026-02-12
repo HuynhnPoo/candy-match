@@ -13,7 +13,7 @@ public class CandyVisual : MonoBehaviour
     public int Colum => colum;
 
     private GridManager grid;
-
+    [SerializeField]
     private CandyTypeList type;
 
     private Vector3 targetPos;
@@ -108,6 +108,7 @@ public class CandyVisual : MonoBehaviour
 
             if (swipe.magnitude < swipeDistance)
             {
+                Debug.Log("hien ra "+ this.row +" " +$"{ this.colum}");
                 this.grid.SelectCandy(this.row, this.colum);
 
             }
@@ -147,11 +148,20 @@ public class CandyVisual : MonoBehaviour
         }
     }
 
-   public void DestroyCandy()
+    //public void SqwanBombCandy()
+    // {
+    //     if ()
+    //     {
+
+    //     }
+    // }
+
+
+    public void DestroyCandy()// sinh effect
     {
-       
-        GameObject obj = Instantiate(destroyEffectPT,this.targetPos, Quaternion.identity);
-        Destroy(obj,1f);   
+
+        GameObject obj = Instantiate(destroyEffectPT, this.targetPos, Quaternion.identity);
+        Destroy(obj, 1f);
     }
 
 }

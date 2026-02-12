@@ -8,6 +8,8 @@ public class Board
     private int cellsize;
     private float spacing;
     private int[,] board;
+   
+   
     public Board(int width, int height, int cellSize, float spacing)
     {
         this.width = width;
@@ -21,8 +23,7 @@ public class Board
         {
             for (int y = 0; y < height; y++)
             {
-                board[x, y] = Random.Range(0, 5);
-                // Debug.Log("hien thi ra " + i + "  " + j);
+                board[x, y] = Random.Range(0, 5); // ngẫu nhiên game object được sinh ra
             }
         }
 
@@ -30,7 +31,7 @@ public class Board
 
     public int GetCandy(int x, int y)
     {
-        if (x >= 0 && x < width && y >= 0 && y < height) return board[x, y];
+        if (x >= 0 && x < width && y >= 0 && y < height) return board[x, y]; //laays vị trí và trả về game object
         return -1;
     }
 
@@ -41,11 +42,40 @@ public class Board
     }
 
 
+  public int CountCurrentColorBombs(CandyVisual[,] candyVisual,int row,int col)
+    {
+       
+        int countBomb = 0;
+        for (int x = 0; x < row; x++)
+        {
+            for (int y = 0; y < col; y++)
+            {
+                //  Debug.Log("hien thi " + candyVisual[x,y]);
+                if (candyVisual[x,y] != null && candyVisual[x, y].TypeCandy == CandyType.CandyTypeList.BOMB_CANDY)
+                {
+                    countBomb++;
+                //    Debug.Log(countBomb);
+                }
+            }
+        }
+        return countBomb;
+    }
+
+
     // ham swap candy
     public void Swap(CandyVisual[,] candies, GridManager grid, int rowA, int colA, int rowB, int colB)
     {
         CandyVisual candyA = candies[rowA, colA]; // vị trí candy 1 trong manng
+
         CandyVisual candyB = candies[rowB, colB];
+
+
+        if( candyA == null || candyB == null )
+        {
+            Debug.LogWarning(" 1 trong 2 candy khong di chuyen do vat can");
+             return;
+        }
+        Debug.Log("hien thi ra candy b "+ candyB.name);
 
         candies[rowA, colA] = candyB;
         candies[rowB, colB] = candyA;

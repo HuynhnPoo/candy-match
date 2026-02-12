@@ -42,7 +42,7 @@ public class Test : MonoBehaviour
 
             /* 
              IteminventoryManager.UseItem("BoostActiveHammer");*/
-            // DatabaseFirebaseManager.Instance.UpLoadCoinAndScore(GameManager.Instance.Coin, GameManager.Instance.HighScore);
+            //tabaseFirebaseManager.Instance.UpLoadCoinAndScore(GameManager.Instance.Coin, GameManager.Instance.HighScore);
 
             /* PlayerPrefs.DeleteKey(StringManager.coinSaveStr);
              PlayerPrefs.DeleteKey(StringManager.highScoreStr);*/

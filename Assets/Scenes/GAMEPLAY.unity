@@ -427,8 +427,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 33.708435}
-  m_SizeDelta: {x: 160, y: 97.4169}
+  m_AnchoredPosition: {x: 0, y: 75}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &51469463
 MonoBehaviour:
@@ -494,7 +494,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 610690998, guid: d77c976bd2a0f1149b36b375593672d9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2ce7a0f092188a043a59c2ef0c313da4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2818,8 +2818,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 345, y: 33.708}
-  m_SizeDelta: {x: 160, y: 97.417}
+  m_AnchoredPosition: {x: 350, y: 75}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &724376189
 MonoBehaviour:
@@ -2885,7 +2885,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 612102593, guid: d77c976bd2a0f1149b36b375593672d9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1d44a0383ec1c184ca38ec8af779bc14, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3871,8 +3871,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -300.32953, y: 37.866028}
-  m_SizeDelta: {x: 135.3409, y: 105.7321}
+  m_AnchoredPosition: {x: -350, y: 75}
+  m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1184197742
 MonoBehaviour:
@@ -3938,7 +3938,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 1861942397, guid: d77c976bd2a0f1149b36b375593672d9, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fac3399473ab0294db85c5e2138b092b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5130,6 +5130,7 @@ MonoBehaviour:
   - {fileID: 3007026720694016761, guid: 3933358abe97f0243a30ea0e29133a84, type: 3}
   - {fileID: 5296284191273774714, guid: 614a283e9c8348c45a54abbbd2a6eaef, type: 3}
   - {fileID: 8462443848851915683, guid: f2f26ac56f41950488f14b0c521284f8, type: 3}
+  - {fileID: 3639556542837173645, guid: ffed74ddb8695bd4094df4908dc3e81e, type: 3}
   backgroundPrefabs: {fileID: 8671615984924539144, guid: 70ff488c6d4ee264180e359b9800e9f1, type: 3}
   selectPrefabs: {fileID: 6321623243930875083, guid: 1efe70123b84b2848b986322ea68db0d, type: 3}
   blockedCellPrefab: {fileID: 4423580556752949136, guid: 9fedb40b8a103814a830ea2d05b63fb2, type: 3}

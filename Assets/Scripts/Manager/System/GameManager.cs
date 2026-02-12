@@ -100,13 +100,13 @@ public class GameManager : SingletonBase<GameManager>
 
     private void Update()
     {
-        if ((IsWinGame || IsGameOver) && !hasEndGame)
+       /* if ((IsWinGame || IsGameOver) && !hasEndGame)
         {
             hasEndGame = true;
             Debug.Log("thuc hien end game");
             OnGameOver?.Invoke();
 
-        }
+        }*/
     }
 
     public void GameOver()

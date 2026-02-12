@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using JetBrains.Annotations;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
@@ -21,7 +22,7 @@ public static class MatchCandy
             Object.Destroy(candy.gameObject);// xóa object
 
         }
-            grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid, candyPrefabs, grid.LocalSize)); //sau khi xoa sẽ thực hiện tạo và lấy đày
+        grid.StartCoroutine(RefillAffterDelay(candyVisuals, grid, candyPrefabs, grid.LocalSize)); //sau khi xoa sẽ thực hiện tạo và lấy đày
     }
 
 
@@ -31,11 +32,11 @@ public static class MatchCandy
         CollapseColumn(candies, grid);
         Refill(grid, candies, candyPrefabs, localSize);
         yield return new WaitForSeconds(0.3f);
-        MatchAllCandy(candies, grid, candyPrefabs);
+        MatchAllCandyAffterRefill(candies, grid, candyPrefabs);
 
     }
 
-    public static void MatchAllCandy(CandyVisual[,] candies, GridManager grid, GameObject[] candyPrefabs)
+    public static void MatchAllCandyAffterRefill(CandyVisual[,] candies, GridManager grid, GameObject[] candyPrefabs)
     {
 
         HashSet<CandyVisual> allMatches = new HashSet<CandyVisual>();
@@ -53,21 +54,142 @@ public static class MatchCandy
 
         if (allMatches.Count >= 3)// nếu lơn hơn 3 sẽ thục hiện xóa
         {
+
             DestroyAnfndRefill(candies, grid, new List<CandyVisual>(allMatches), candyPrefabs);
         }
 
     }
 
+    
     public static HashSet<CandyVisual> FindAllMacth(CandyVisual[,] candies, int width, int height, int row, int col)
     {
 
         HashSet<CandyVisual> allMatches = new HashSet<CandyVisual>();
-        allMatches.UnionWith(FindHorizontalMatch(candies, row, col, width));
-        allMatches.UnionWith(FindVerticalMatch(candies, row, col, height));
+
+        HashSet<CandyVisual> horizontalMatch = FindVerticalMatch(candies, row, col, height);
+        HashSet<CandyVisual> verticalMatch = FindHorizontalMatch(candies, row, col, width);
+
+        // Chỉ kiểm tra khi ô hiện tại là ô TRÁI NHẤT của match ngang
+        if (horizontalMatch.Count >= 3)
+        {
+
+            Debug.Log(horizontalMatch.Count + " thuc hien kiem tra ngang tai [" + col + "]");
+
+            CheckLineColorBombLocal(candies, horizontalMatch, true);
+            allMatches.UnionWith(horizontalMatch);
+
+        }
+
+        // Chỉ kiểm tra khi ô hiện tại là ô TRÊN CÙNG của match dọc
+        if (verticalMatch.Count >= 3)
+        {
+            Debug.Log(verticalMatch.Count + " thuc hien kiem tra doc tai [" + row + "]");
+            CheckLineColorBombLocal(candies, verticalMatch, false);
+
+            allMatches.UnionWith(verticalMatch);
+        }
+
 
         return allMatches;
     }
+    /*  static void CheckColorBomb(GridManager gridManager, CandyVisual[,] candies, HashSet<CandyVisual> match)
+       {
 
+
+           Vector2Int vertical = gridManager.lastSwapA;
+           Vector2Int horizontal = gridManager.lastSwapB;
+
+           Debug.Log("hien ra a b" + vertical + horizontal);
+
+           if (vertical.x == horizontal.x) // kiểm tra theo hang dọc xem có color bomb không
+               GameMechanics.CheckLineColorBomb(gridManager,candies,match,vertical,horizontal,gridManager.Height);
+
+           if (vertical.y == horizontal.y) // kiểm tra theo hàng nagng xme có color bomb không
+               GameMechanics.CheckHorizontalColorBomb(gridManager, candies, match, vertical, horizontal, gridManager.Width);
+
+       }*/
+
+    static void CheckLineColorBombLocal(CandyVisual[,] candies, HashSet<CandyVisual> matchedCandies, bool isHorizontal)
+    {
+        int maxRows = candies.GetLength(0);
+        int maxCols = candies.GetLength(1);
+
+        // Lấy tất cả vị trí của các candy đã match
+        HashSet<(int row, int col)> matchedPositions = new HashSet<(int, int)>();
+
+        for (int r = 0; r < maxRows; r++)
+        {
+            for (int c = 0; c < maxCols; c++)
+            {
+                if (candies[r, c] != null && matchedCandies.Contains(candies[r, c]))
+                {
+                    matchedPositions.Add((r, c));
+                }
+            }
+        }
+
+        // Kiểm tra các ô bên cạnh
+        foreach (var pos in matchedPositions)
+        {
+            if (isHorizontal)
+            {
+                // Match ngang -> kiểm tra trên/dưới
+                CheckAndTrigger(pos.row - 1, pos.col, candies, matchedCandies);
+                CheckAndTrigger(pos.row + 1, pos.col, candies, matchedCandies);
+            }
+            else
+            {
+                // Match dọc -> kiểm tra trái/phải
+                CheckAndTrigger(pos.row, pos.col - 1, candies, matchedCandies);
+                CheckAndTrigger(pos.row, pos.col + 1, candies, matchedCandies);
+            }
+        }
+    }
+
+    private static void CheckAndTrigger(int row, int col, CandyVisual[,] candies, HashSet<CandyVisual> matchedCandies)
+    {
+        int maxRows = candies.GetLength(0);
+        int maxCols = candies.GetLength(1);
+
+        if (row < 0 || row >= maxRows || col < 0 || col >= maxCols)
+            return;
+
+        CandyVisual target = candies[row, col];
+
+        if (target != null && !matchedCandies.Contains(target))
+        {
+            Debug.Log($"Kích hoạt bomb tại [{row},{col}] - Type: {target.TypeCandy}");
+
+            // Truyền thêm matchedCandies để các candy bị phá hủy được thêm vào
+            ImplementExplorePlus(candies, row, col, matchedCandies);
+        }
+    }
+
+    static void ImplementExplorePlus(CandyVisual[,] candies, int currentRow, int currentCol, HashSet<CandyVisual> matchedCandies)
+    {
+        int maxRow = candies.GetLength(0);
+        int maxCol = candies.GetLength(1);
+
+        Debug.Log("Thực hiện nổ theo dấu cộng tại [" + currentRow + "," + currentCol + "]");
+
+        // Phá hủy hàng ngang
+        for (int col = 0; col < maxCol; col++)
+        {
+            if (candies[currentRow, col] != null)
+            {
+                matchedCandies.Add(candies[currentRow, col]); // THÊM VÀO matchedCandies
+            }
+        }
+
+        // Phá hủy hàng dọc
+        for (int row = 0; row < maxRow; row++)
+        {
+            if (candies[row, currentCol] != null)
+            {
+                matchedCandies.Add(candies[row, currentCol]); // THÊM VÀO matchedCandies
+            }
+        }
+    }
     private static HashSet<CandyVisual> FindHorizontalMatch(CandyVisual[,] candies, int row, int col, int cols)
     {
 
@@ -76,10 +198,14 @@ public static class MatchCandy
         if (candy == null) return matchCandies;
         List<CandyVisual> horizontal = new List<CandyVisual>() { candy };
 
+
+
         for (int c = col - 1; c >= 0; c--) // duyet tung cột từ phải sang trái
         {
+
+
             //kiểm tra cung kiểu sẽ thưc hiện thêm vào
-            if (candies[row, c] != null && candy.TypeCandy == candies[row, c].TypeCandy)
+            if (candies[row, c] != null && candy.TypeCandy != CandyType.CandyTypeList.BOMB_CANDY && candy.TypeCandy == candies[row, c].TypeCandy)
             {
 
                 horizontal.Add(candies[row, c]);
@@ -91,7 +217,7 @@ public static class MatchCandy
         for (int c = col + 1; c < cols; c++) // duyệt từ cột từ trái qua phải
         {
             //kiểm tra cung kiểu sẽ thưc hiện thêm vào
-            if (candies[row, c] != null && candy.TypeCandy == candies[row, c].TypeCandy)
+            if (candies[row, c] != null && candy.TypeCandy != CandyType.CandyTypeList.BOMB_CANDY && candy.TypeCandy == candies[row, c].TypeCandy)
 
             {
                 horizontal.Add(candies[row, c]);
@@ -101,6 +227,7 @@ public static class MatchCandy
         if (horizontal.Count >= 3)// số lương thêm phải lơn hơn 3 mỡi thực hiện hợp nhất với các obj cung kiểu
         {
             matchCandies.UnionWith(horizontal);
+
             GameMechanics.AddScore(horizontal.Count);
         }
 
@@ -108,6 +235,8 @@ public static class MatchCandy
         return matchCandies;
 
     }
+
+
     private static HashSet<CandyVisual> FindVerticalMatch(CandyVisual[,] candies, int row, int col, int rows)
     {
         HashSet<CandyVisual> matchCandies = new HashSet<CandyVisual>();
@@ -118,8 +247,9 @@ public static class MatchCandy
 
         for (int r = row - 1; r >= 0; r--)
         {
-            if (candies[r, col] != null && candies[r, col].TypeCandy == candy.TypeCandy)
+            if (candies[r, col] != null && candy.TypeCandy != CandyType.CandyTypeList.BOMB_CANDY && candies[r, col].TypeCandy == candy.TypeCandy)
             {
+
                 vertical.Add(candies[r, col]);
             }
             else break;
@@ -127,9 +257,10 @@ public static class MatchCandy
         }
         for (int r = row + 1; r < rows; r++)
         {
-            if (candies[r, col] != null && candies[r, col].TypeCandy == candy.TypeCandy)
+            if (candies[r, col] != null && candy.TypeCandy != CandyType.CandyTypeList.BOMB_CANDY && candies[r, col].TypeCandy == candy.TypeCandy)
             {
                 vertical.Add(candies[r, col]);
+
 
             }
             else break;
@@ -139,6 +270,7 @@ public static class MatchCandy
         if (vertical.Count >= 3)
         {
             matchCandies.UnionWith(vertical);
+            //  CheckColorBombVertical(,)
             GameMechanics.AddScore(vertical.Count);
         }
         return matchCandies;
@@ -154,7 +286,7 @@ public static class MatchCandy
             int writeRow = 0;
             for (int y = 0; y < grid.Height; y++)
             {
-                while (writeRow < y && grid.LevelLayout != null && !grid.LevelLayout[x, writeRow])
+                while (writeRow < grid.Height && writeRow < y && grid.LevelLayout != null && !grid.LevelLayout[x, writeRow])
                 {
                     writeRow++;
                 }
@@ -191,10 +323,24 @@ public static class MatchCandy
                 if (grid.LevelLayout != null && !grid.LevelLayout[x, y]) continue;
                 if (candies[x, y] != null) continue; // Bỏ qua nếu đã có kẹo
                 Vector2 pos2D = grid.board.GetWorldPosition(x, y);
-                int candyTypeID = Random.Range(0, candyPrefabs.Length);
+
+                int newIndexCandy = 0;
+                float ramdomAAA = Random.value;
+                if (grid.board.CountCurrentColorBombs(candies, grid.Width, grid.Height) < 2 && ramdomAAA < 50f)
+
+                {
+                    newIndexCandy = candyPrefabs.Length - 1;
+                }
+                else
+                {
+                    //int candyTypeID = Random.Range(0, candyPrefabs.Length - 1);
+                    newIndexCandy = Random.Range(0, candyPrefabs.Length - 1);
+                }
+
+
                 Vector3 targetPos = grid.transform.position + new Vector3(pos2D.x, pos2D.y, -1);
                 Vector3 startPos = grid.transform.position + new Vector3(pos2D.x, grid.Height * (grid.CellSize + grid.Spacing), -1);
-                GameObject newCandy = Object.Instantiate(candyPrefabs[candyTypeID], startPos, Quaternion.identity, grid.transform);
+                GameObject newCandy = Object.Instantiate(candyPrefabs[newIndexCandy], startPos, Quaternion.identity, grid.transform);
                 CandyVisual candyVisual = newCandy.GetComponent<CandyVisual>();
                 if (candyVisual == null) return;
                 candies[x, y] = candyVisual;
@@ -236,7 +382,7 @@ public static class MatchCandy
                 if (col < grid.Height - 1 && candies[row, col + 1] != null && CheckSwapMove(candies, row, col, row, col + 1)) return true;
 
                 // kiểm tra  hoán đổi bên dưới
-                if (row < grid.Width -1 && candies[row + 1, col] !=null && CheckSwapMove(candies, row, col, row + 1, col)) return true;
+                if (row < grid.Width - 1 && candies[row + 1, col] != null && CheckSwapMove(candies, row, col, row + 1, col)) return true;
             }
         }
         return false;
@@ -247,7 +393,7 @@ public static class MatchCandy
     {
         (candies[row1, col1], candies[row2, col2]) = (candies[row2, col2], candies[row1, col1]); //hoán đổi tạm thời
 
-        bool matchFound = MatchCount(candies, row1, col1) >=3 || MatchCount(candies, row2, col2) >= 3; //kiêm tra vị trí 2 viên kẹo
+        bool matchFound = MatchCount(candies, row1, col1) >= 3 || MatchCount(candies, row2, col2) >= 3; //kiêm tra vị trí 2 viên kẹo
 
         (candies[row1, col1], candies[row2, col2]) = (candies[row2, col2], candies[row1, col1]); //hoán đổi lại ngược lại
 
@@ -256,12 +402,12 @@ public static class MatchCandy
 
     private static int MatchCount(CandyVisual[,] candies, int row, int col)
     {
-        return FindAllMacth(candies,candies.GetLength(0),candies.GetLength(1),row,col).Count;
+        return FindAllMacth(candies, candies.GetLength(0), candies.GetLength(1), row, col).Count;
     }
 
 
-   // thục hien xóa hang khi clikc vào candy 
-   public static void ClearRow(CandyVisual[,] candies, GridManager grid, int currentRow, GameObject[] candyPrefabs)
+    // thục hien xóa hang khi clikc vào candy 
+    public static void ClearRow(CandyVisual[,] candies, GridManager grid, int currentRow, GameObject[] candyPrefabs)
     {
         for (int col = 0; col < candies.GetLength(0); col++)
         {
@@ -270,9 +416,9 @@ public static class MatchCandy
 
             Object.Destroy(candy.gameObject); //thực hiện xóa
 
-            candies[currentRow, col] = null; 
+            candies[currentRow, col] = null;
 
-            grid.StartCoroutine(RefillAffterDelay(candies, grid, candyPrefabs, grid.LocalSize)); //lấp đầy bảng
         }
+        grid.StartCoroutine(RefillAffterDelay(candies, grid, candyPrefabs, grid.LocalSize)); //lấp đầy bảng
     }
 }
