@@ -60,7 +60,7 @@ public static class MatchCandy
 
     }
 
-    
+
     public static HashSet<CandyVisual> FindAllMacth(CandyVisual[,] candies, int width, int height, int row, int col)
     {
 
@@ -73,7 +73,7 @@ public static class MatchCandy
         if (horizontalMatch.Count >= 3)
         {
 
-            Debug.Log(horizontalMatch.Count + " thuc hien kiem tra ngang tai [" + col + "]");
+            //  Debug.Log(horizontalMatch.Count + " thuc hien kiem tra ngang tai [" + col + "]");
 
             CheckLineColorBombLocal(candies, horizontalMatch, true);
             allMatches.UnionWith(horizontalMatch);
@@ -83,9 +83,8 @@ public static class MatchCandy
         // Chỉ kiểm tra khi ô hiện tại là ô TRÊN CÙNG của match dọc
         if (verticalMatch.Count >= 3)
         {
-            Debug.Log(verticalMatch.Count + " thuc hien kiem tra doc tai [" + row + "]");
+            // Debug.Log(verticalMatch.Count + " thuc hien kiem tra doc tai [" + row + "]");
             CheckLineColorBombLocal(candies, verticalMatch, false);
-
             allMatches.UnionWith(verticalMatch);
         }
 
@@ -156,11 +155,12 @@ public static class MatchCandy
 
         CandyVisual target = candies[row, col];
 
-        if (target != null && !matchedCandies.Contains(target))
+        if (target != null && !matchedCandies.Contains(target) && target.TypeCandy == CandyType.CandyTypeList.RED)
         {
             Debug.Log($"Kích hoạt bomb tại [{row},{col}] - Type: {target.TypeCandy}");
 
             // Truyền thêm matchedCandies để các candy bị phá hủy được thêm vào
+
             ImplementExplorePlus(candies, row, col, matchedCandies);
         }
     }
@@ -406,7 +406,7 @@ public static class MatchCandy
     }
 
 
-    // thục hien xóa hang khi clikc vào candy 
+    // thục hien xóa hang khi clikc vào row
     public static void ClearRow(CandyVisual[,] candies, GridManager grid, int currentRow, GameObject[] candyPrefabs)
     {
         for (int col = 0; col < candies.GetLength(0); col++)
@@ -420,5 +420,26 @@ public static class MatchCandy
 
         }
         grid.StartCoroutine(RefillAffterDelay(candies, grid, candyPrefabs, grid.LocalSize)); //lấp đầy bảng
+    }
+
+
+    // thực hiện thay đổi candy bằng candy khác
+    public static void ChangeCandy(CandyVisual[,] candies, int x1, int y1, int x2, int y2)
+    {
+        CandyVisual candyA = candies[x1, y1]; // lấy vị trí cua 2 candy
+        CandyVisual candyB = candies[x2, y2];
+
+        SpriteRenderer spriteRenderA = candyA.transform.GetChild(0).GetComponent<SpriteRenderer>();
+        SpriteRenderer spriteRenderB = candyB.transform.GetChild(0).GetComponent<SpriteRenderer>();
+
+        if (candyA == null || candyB == null) return;
+
+        Sprite tempSprite = spriteRenderA.sprite;
+
+        spriteRenderB.sprite = tempSprite;
+        spriteRenderB.color= Color.white;
+       
+        candyB.SetTypeCandy(candyA.TypeCandy,false);
+
     }
 }

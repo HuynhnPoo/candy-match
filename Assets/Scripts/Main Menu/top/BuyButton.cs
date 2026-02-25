@@ -45,6 +45,9 @@ public class BuyButron : ButtonBase
             case 12:
                 GameMechanics.BuyItemChecking(listItem, "BoostActiveShuffle");
                 break;
+            case 13:
+                GameMechanics.BuyItemChecking(listItem, "BoostActiveSwapColor");
+                break;
 
         }
 

@@ -55,6 +55,7 @@ public static class BoostItemManager
 
         GameManager.Instance.OnboostGame = ActiveHamer;
         GameManager.Instance.OnboostGame += ActiveShuffle;
+        GameManager.Instance.OnboostGame += ActiveSwapCollor;
     }
 
   static void ActiveHamer(string nameItem)
@@ -86,7 +87,7 @@ public static class BoostItemManager
         {
 
             Debug.Log("hien thi ra hoan doi color ");
-          //  GameManager.Instance.ShuffleCandyBoost();
+            GameManager.Instance.IsChangeCandy=true;
         }
     }
 }

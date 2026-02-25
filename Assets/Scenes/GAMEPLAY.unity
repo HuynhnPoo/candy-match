@@ -611,6 +611,7 @@ GameObject:
   - component: {fileID: 132137807}
   - component: {fileID: 132137809}
   - component: {fileID: 132137808}
+  - component: {fileID: 132137810}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -734,6 +735,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 132137806}
   m_CullTransparentMesh: 1
+--- !u!114 &132137810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 132137806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: afbe50b529016c740bfb6afead0da2de, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 0}
+  nameItem: BoostActiveSwapColor
 --- !u!1 &155662338
 GameObject:
   m_ObjectHideFlags: 0
@@ -2794,6 +2809,7 @@ GameObject:
   - component: {fileID: 724376191}
   - component: {fileID: 724376190}
   - component: {fileID: 724376189}
+  - component: {fileID: 724376192}
   m_Layer: 5
   m_Name: Button (2)
   m_TagString: Untagged
@@ -2903,6 +2919,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724376187}
   m_CullTransparentMesh: 1
+--- !u!114 &724376192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724376187}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 594d9d2a30cc8dd468d104053f1c3bd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameItem: BoostActiveSwapColor
 --- !u!1 &735372006
 GameObject:
   m_ObjectHideFlags: 0
@@ -5134,6 +5163,8 @@ MonoBehaviour:
   backgroundPrefabs: {fileID: 8671615984924539144, guid: 70ff488c6d4ee264180e359b9800e9f1, type: 3}
   selectPrefabs: {fileID: 6321623243930875083, guid: 1efe70123b84b2848b986322ea68db0d, type: 3}
   blockedCellPrefab: {fileID: 4423580556752949136, guid: 9fedb40b8a103814a830ea2d05b63fb2, type: 3}
+  lastSwapA: {x: 0, y: 0}
+  lastSwapB: {x: 0, y: 0}
 --- !u!4 &1564431000
 Transform:
   m_ObjectHideFlags: 0

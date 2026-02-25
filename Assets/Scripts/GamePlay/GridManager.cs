@@ -25,6 +25,7 @@ public class GridManager : MonoBehaviour, ICompoment
     private bool[,] levelLayout;
     public bool[,] LevelLayout => levelLayout;
     private Vector2Int? selectCandy = null;
+    private Vector2Int? boostFirst = null;
     [SerializeField] private GameObject[] candyPrefabs;
     private GameObject[,] selectVisualGrid;
 
@@ -37,8 +38,8 @@ public class GridManager : MonoBehaviour, ICompoment
 
     private LevelManager levelManager;
 
-    public  Vector2Int lastSwapA;
-    public  Vector2Int lastSwapB;
+    public Vector2Int lastSwapA;
+    public Vector2Int lastSwapB;
 
     private void OnEnable()
     {
@@ -91,10 +92,14 @@ public class GridManager : MonoBehaviour, ICompoment
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-           // Refill();
-        } 
-        
-       
+            // Refill();
+
+         
+
+            Debug.Log("is candychange " + GameManager.Instance.IsChangeCandy);
+        }
+
+
 
     }
 
@@ -141,18 +146,18 @@ public class GridManager : MonoBehaviour, ICompoment
 
                     int newIndexCandy = 0;
 
-                    if (board.CountCurrentColorBombs(visualGrid,Width,Height) <2  &&  Random.value <0.02f)
+                    if (board.CountCurrentColorBombs(visualGrid, Width, Height) < 2 && Random.value < 0.02f)
                     {
                         newIndexCandy = colorBombChanceIndex;
                     }
                     else
                     {
-                        newIndexCandy= board.GetCandy(x, y);
+                        newIndexCandy = board.GetCandy(x, y);
                     }
 
                     // Spawn candy
-                  //  int candy = board.GetCandy(x, y);
-                   // Debug.Log("hien thi canyd"+ candy);
+                    //  int candy = board.GetCandy(x, y);
+                    // Debug.Log("hien thi canyd"+ candy);
                     Vector3 candyPos = transform.position + new Vector3(pos2D.x, pos2D.y, -1);
                     GameObject newCandy = Instantiate(candyPrefabs[newIndexCandy], candyPos, Quaternion.identity, transform);
 
@@ -201,40 +206,69 @@ public class GridManager : MonoBehaviour, ICompoment
 
     public void SelectCandy(int x, int y) // chọn candy
     {
-        if (selectCandy == null)
+        if (GameManager.Instance.IsChangeCandy)
         {
-            selectCandy = new Vector2Int(x, y);
-            selectVisualGrid[x, y].SetActive(true);
+
+            if (boostFirst == null)
+            {
+
+                boostFirst = new Vector2Int(x, y);
+                selectVisualGrid[x, y].SetActive(true);
+            }
+
+            Vector2Int first = boostFirst.Value;
+
+            if (first.x == x && first.y == y)
+                return;
+
+            MatchCandy.ChangeCandy(visualGrid, first.x, first.y, x, y);
+            HidePreviousSelection();
+
+            boostFirst = null;
+            GameManager.Instance.IsChangeCandy = false;
+            return;
         }
         else
         {
-            Vector2Int first = selectCandy.Value;
-            HidePreviousSelection();
-
-            if (Mathf.Abs(first.x - x) == 1 && first.y == y ||
-                Mathf.Abs(first.y - y) == 1 && first.x == x)
+            if (selectCandy == null)
             {
-
-                board.Swap(visualGrid, this, first.x, first.y, x, y);
-                lastSwapA = new Vector2Int(first.x, first.y);
-                lastSwapB = new Vector2Int(x, y);
-
-                selectCandy = null;
-                GameManager.Instance.MoveStep--;
-            }
-            else if (first.x == x || first.y == y)
-            {
-                selectCandy = null;
-                HidePreviousSelection();
-                return;
-            }
-            else
-            {
-                //  selectCandy = null;
                 selectCandy = new Vector2Int(x, y);
                 selectVisualGrid[x, y].SetActive(true);
             }
+            else
+            {
+                Vector2Int first = selectCandy.Value;
+                HidePreviousSelection();
+
+                if (Mathf.Abs(first.x - x) == 1 && first.y == y ||
+                    Mathf.Abs(first.y - y) == 1 && first.x == x)
+                {
+
+
+                    board.Swap(visualGrid, this, first.x, first.y, x, y);
+                    lastSwapA = new Vector2Int(first.x, first.y);
+                    lastSwapB = new Vector2Int(x, y);
+
+                    selectCandy = null;
+                    GameManager.Instance.MoveStep--;
+                }
+                else if (first.x == x || first.y == y)
+                {
+                    selectCandy = null;
+                    HidePreviousSelection();
+                    return;
+                }
+                else
+                {
+
+                    //selectCandy = null;
+                    selectCandy = new Vector2Int(x, y);
+                    selectVisualGrid[x, y].SetActive(true);
+                }
+            }
         }
+
+
     }
 
     public void SwipeCandy(int row, int col, Vector2Int direction)
@@ -244,8 +278,8 @@ public class GridManager : MonoBehaviour, ICompoment
 
         board.Swap(visualGrid, this, row, col, newRow, newCol);
 
-        lastSwapA=new Vector2Int(row, col);
-        lastSwapB=new Vector2Int(newRow, newCol);
+        lastSwapA = new Vector2Int(row, col);
+        lastSwapB = new Vector2Int(newRow, newCol);
 
         HidePreviousSelection(); // tắt gameobject đã chọn
         selectCandy = null;
@@ -257,7 +291,7 @@ public class GridManager : MonoBehaviour, ICompoment
     public bool CheckMatchesForSwap(int rowA, int colA, int rowB, int colB)
     {
 
-   
+
         HashSet<CandyVisual> matchesA = MatchCandy.FindAllMacth(visualGrid, width, height, rowA, colA);
         HashSet<CandyVisual> matchesB = MatchCandy.FindAllMacth(visualGrid, width, height, rowB, colB);
 
@@ -275,6 +309,6 @@ public class GridManager : MonoBehaviour, ICompoment
 
     public void ActiveClearRow(int posCandy)
     {
-        MatchCandy.ClearRow(visualGrid,this,posCandy,candyPrefabs);
+        MatchCandy.ClearRow(visualGrid, this, posCandy, candyPrefabs);
     }
- }
+}

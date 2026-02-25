@@ -12,6 +12,7 @@ public class GameManager : SingletonBase<GameManager>
     public bool IsGameOver { set; get; } = false;
     public bool IsWinGame { set; get; } = false; 
     public bool IsClearCandy { set; get; } = false;
+    public bool IsChangeCandy { set; get; } = false;
 
     bool hasEndGame = false;
     private int score = 0;

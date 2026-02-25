@@ -51,15 +51,25 @@ public class CandyVisual : MonoBehaviour
         this.colum = colum;
     }
 
-    public void SetTypeCandy(CandyTypeList newType)
+    public void SetTypeCandy(CandyTypeList newType,bool isSameType)
     {
-        if (type == newType)
-        {
-            type = newType;
-            gameObject.name = newType.ToString();
 
+        if (isSameType && type == newType) // cung kiểu mới có thẻ câp nhật
+        {
+             type = newType;
+            this.gameObject.name = newType.ToString();
             CandyName.LoadName(newType.ToString(), this);
         }
+
+        else
+        {
+            type = newType;
+            this.gameObject.name = newType.ToString();
+            CandyName.LoadName(newType.ToString(), this);
+        }
+
+
+
     }
 
     private void OnEnable()
@@ -147,15 +157,6 @@ public class CandyVisual : MonoBehaviour
             }
         }
     }
-
-    //public void SqwanBombCandy()
-    // {
-    //     if ()
-    //     {
-
-    //     }
-    // }
-
 
     public void DestroyCandy()// sinh effect
     {

@@ -98,9 +98,10 @@ public class ShuffleCandy
               
                 int ramdomType = UnityEngine.Random.Range(0,Enum.GetValues(typeof(CandyType.CandyTypeList)).Length);
 
-                candiesA.SetTypeCandy((CandyType.CandyTypeList) ramdomType);
-                candiesB.SetTypeCandy((CandyType.CandyTypeList) ramdomType);
-                candiesC.SetTypeCandy((CandyType.CandyTypeList) ramdomType);
+                // cung type mới có thể cap nhật nếu khoog nó sẽ cập nhật sai type candy
+                candiesA.SetTypeCandy((CandyType.CandyTypeList) ramdomType,true); 
+                candiesB.SetTypeCandy((CandyType.CandyTypeList) ramdomType,true);
+                candiesC.SetTypeCandy((CandyType.CandyTypeList) ramdomType,true);
                 return;
 
             }

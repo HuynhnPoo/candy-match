@@ -75,7 +75,7 @@ public class Board
             Debug.LogWarning(" 1 trong 2 candy khong di chuyen do vat can");
              return;
         }
-        Debug.Log("hien thi ra candy b "+ candyB.name);
+      //  Debug.Log("hien thi ra candy b "+ candyB.name);
 
         candies[rowA, colA] = candyB;
         candies[rowB, colB] = candyA;
