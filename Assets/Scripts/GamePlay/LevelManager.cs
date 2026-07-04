@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
     // Gọi để nạp layout mới
     public void LoadNewLevelData(int curentLevel)
     {
+
         if (levelDatabase == null)
         {
             Debug.LogError("❌ Level Database not assigned!");

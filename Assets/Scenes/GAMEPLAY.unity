@@ -6992,6 +6992,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Destroy_Effect
       objectReference: {fileID: 0}
+    - target: {fileID: 7398933295343546350, guid: 2917ccc7761a8a84a8a91ddd1b726f4e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -10,9 +10,9 @@ public class LevelPlaySample : SingletonBase<LevelPlaySample>
     private LevelPlayBannerAd bannerAd;
     private LevelPlayInterstitialAd interstitialAd;
     private LevelPlayRewardedAd rewardedVideoAd;
-     
-  
-    bool isAdsEnabled = false;
+
+
+   // bool isAdsEnabled = false;
     bool isBanner = false;
 
     //[SerializeField]
@@ -21,25 +21,28 @@ public class LevelPlaySample : SingletonBase<LevelPlaySample>
     //private TextMeshProUGUI text2;
     //[SerializeField]
     //private TextMeshProUGUI text3;
-    
+
     //[SerializeField]
     //private TextMeshProUGUI text4;
+    private bool isInitialized = false;
 
     public void Start()
     {
+        // Chặn việc gọi Init 2 lần liên tiếp gây lỗi 400
+        if (isInitialized) return;
+        isInitialized = true;
         // SDK init
         LevelPlay.ValidateIntegration();
         Debug.Log("[LevelPlaySample] LevelPlay SDK initialization");
-        
 
-        Debug.Log($"[LevelPlaySample] Unity version {LevelPlay.UnityVersion}");
-           LevelPlay.SetMetaData("is_test", "true");
+
         LevelPlay.SetMetaData("is_test_device", "true");
+      //  LevelPlay.SetMetaData("is_test", "true");
         Debug.Log("[LevelPlaySample] Register initialization callbacks");
         LevelPlay.OnInitSuccess += SdkInitializationCompletedEvent;
         LevelPlay.OnInitFailed += SdkInitializationFailedEvent;
 
-        Debug.Log("[LevelPlaySample] LevelPlay.ValidateIntegration");
+        Debug.Log("[LevelPlaySample] LevelPlay.ValidateIntegration"+AdConfig.AppKey);
         LevelPlay.Init(AdConfig.AppKey);
     }
 
@@ -92,11 +95,11 @@ public class LevelPlaySample : SingletonBase<LevelPlaySample>
     {
         Debug.Log($"[LevelPlaySample] Received SdkInitializationCompletedEvent with Config: {config}");
         EnableAds();
-        isAdsEnabled = true;
+        //isAdsEnabled = true;
         // LoadBannerAD();
         LoadIntersitialAD();
         LoadRewardedAD();
-       // text2.SetText($"hien ra Init OK.{config.IsAdQualityEnabled}");
+        // text2.SetText($"hien ra Init OK.{config.IsAdQualityEnabled}");
     }
 
     public void LoadIntersitialAD()
@@ -142,12 +145,12 @@ public class LevelPlaySample : SingletonBase<LevelPlaySample>
             Debug.Log("hien ra í banner" + isBanner);
 
         }
-        else
-        {
-            isBanner = false;
-            bannerAd.HideAd();
-            Debug.Log("hien ra í banner" + isBanner);
-        }
+        //else
+        //{
+        //    isBanner = false;
+        //    bannerAd.HideAd();
+        //    Debug.Log("hien ra í banner" + isBanner);
+        //}
 
     }
 
@@ -171,7 +174,7 @@ public class LevelPlaySample : SingletonBase<LevelPlaySample>
     {
         Debug.Log($"[LevelPlaySample] Received SdkInitializationFailedEvent with Error: {error}");
 
-      //  text3.SetText(error.ToString() + " " + error.ErrorCode + " "+error.ErrorMessage);
+        //  text3.SetText(error.ToString() + " " + error.ErrorCode + " "+error.ErrorMessage);
 
 
     }
@@ -204,7 +207,7 @@ public class LevelPlaySample : SingletonBase<LevelPlaySample>
     {
         Debug.Log($"[LevelPlaySample] Received RewardedVideoOnAdRewardedEvent With AdInfo: {adInfo} and Reward: {reward}");
         //text4.SetText("qua tang la"+ reward.Name +" "+reward.Amount);
-        Debug.Log("them gia tri coin" + reward.Name+" "+ reward.Amount);
+        Debug.Log("them gia tri coin" + reward.Name + " " + reward.Amount);
         GameManager.Instance.Coin += reward.Amount;
         //PlayerPrefs.SetInt(StringManager.coinSaveStr, GameManager.Instance.Coin);
 

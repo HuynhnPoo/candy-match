@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class Board
@@ -37,12 +38,22 @@ public class Board
 
     public Vector2 GetWorldPosition(int x, int y)
     {
-        float step = this.cellsize + this.spacing;
-        return new Vector2(x * step, y * step);
+        float step = cellsize + spacing;
+
+        float totalWidth = (width - 1) * step;
+        float totalHeight = (height - 1) * step;
+
+        float offsetX = -totalWidth / 2f;
+        float offsetY = -totalHeight / 2f;
+
+        return new Vector2(
+            x * step + offsetX,
+            y * step + offsetY
+        );
     }
 
 
-  public int CountCurrentColorBombs(CandyVisual[,] candyVisual,int row,int col)
+    public int CountCurrentColorBombs(CandyVisual[,] candyVisual,int row,int col)
     {
        
         int countBomb = 0;

@@ -65,13 +65,13 @@ public class PreprocessorDirectives
 
 
 
-#if UNITY_EDITOR
-        // Bật log cho Debug.Log khi đang trong Editor
-        Debug.unityLogger.logEnabled = true;
-#else
-        // Tắt log cho Debug.Log khi đã build (bản Release)
-        Debug.unityLogger.logEnabled = false;
-#endif
+//#if UNITY_EDITOR
+//        // Bật log cho Debug.Log khi đang trong Editor
+//        Debug.unityLogger.logEnabled = true;
+//#else
+//        // Tắt log cho Debug.Log khi đã build (bản Release)
+//        Debug.unityLogger.logEnabled = false;
+//#endif
     }
 
 }

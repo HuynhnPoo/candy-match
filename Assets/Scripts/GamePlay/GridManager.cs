@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GridManager : MonoBehaviour, ICompoment
 {
@@ -32,6 +33,7 @@ public class GridManager : MonoBehaviour, ICompoment
     [SerializeField] private GameObject backgroundPrefabs;
     [SerializeField] private GameObject selectPrefabs;
     [SerializeField] private GameObject blockedCellPrefab;
+    public GameObject[] CandyPrefabsPublic => candyPrefabs;
 
     public CandyVisual[,] visualGrid { set; get; }
     public Board board { set; get; }
@@ -65,13 +67,27 @@ public class GridManager : MonoBehaviour, ICompoment
         }
         else
         {
-            this.cellSize = (int)0.4f; //
-            this.spacing = 0.6f;// khaonrg cach
-            this.localSize = 0.3f;// độ lớn
-            this.transform.position = new Vector3(-2.15f, -3.15f, 0);// vị trí
+            if (GameManager.Instance.CurrentLevel > 2&& GameManager.Instance.CurrentLevel < 7)
+            {
+                this.cellSize = (int)0.5f; //
+                this.spacing = 0.9f;// khaonrg cach
+                this.localSize = 0.5f;// độ lớn
+                this.transform.position = new Vector3(-2.15f, -2.85f, 0);// vị trí
+                levelManager.LoadNewLevelData(GameManager.Instance.CurrentLevel);
+                LoadAndInstantiateGrid();
 
-            levelManager.LoadNewLevelData(GameManager.Instance.CurrentLevel);
-            LoadAndInstantiateGrid();
+            }
+            else
+            {
+
+                this.cellSize = (int)0.4f; //
+                this.spacing = 0.6f;// khaonrg cach
+                this.localSize = 0.3f;// độ lớn
+                this.transform.position = new Vector3(-2.15f, -3.15f, 0);// vị trí
+                levelManager.LoadNewLevelData(GameManager.Instance.CurrentLevel);
+                LoadAndInstantiateGrid();
+            }
+
         }
     }
 
@@ -92,11 +108,8 @@ public class GridManager : MonoBehaviour, ICompoment
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            // Refill();
-
-         
-
-            Debug.Log("is candychange " + GameManager.Instance.IsChangeCandy);
+            SceneManager.LoadScene(UIManager.SceneType.GAMEPLAY.ToString());
+            //  Debug.Log("is candychange " + GameManager.Instance.IsChangeCandy);
         }
 
 
@@ -122,6 +135,8 @@ public class GridManager : MonoBehaviour, ICompoment
         visualGrid = new CandyVisual[Width, Height];
         selectVisualGrid = new GameObject[Width, Height];
 
+        Vector3 centerScreen = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, 10f));
+        transform.position = new Vector3(centerScreen.x, centerScreen.y, 0);
         if (levelLayout == null)
         {
             Debug.LogWarning("⚠️ Level layout is null, creating default layout.");
@@ -189,12 +204,12 @@ public class GridManager : MonoBehaviour, ICompoment
         Debug.Log("✅ Grid instantiated successfully!");
     }
 
-    void HidePreviousSelection() //ẩn các objetc đã chọn
+    void HidePreviousSelection(Vector2Int? selectedCanđy) //ẩn các objetc đã chọn
     {
-        if (selectCandy.HasValue)
+        if (selectedCanđy.HasValue)
         {
-            int oldX = selectCandy.Value.x;
-            int oldY = selectCandy.Value.y;
+            int oldX = selectedCanđy.Value.x;
+            int oldY = selectedCanđy.Value.y;
 
             // ⭐ ẨN đối tượng chọn cũ
             if (selectVisualGrid[oldX, oldY] != null)
@@ -222,8 +237,8 @@ public class GridManager : MonoBehaviour, ICompoment
                 return;
 
             MatchCandy.ChangeCandy(visualGrid, first.x, first.y, x, y);
-            HidePreviousSelection();
 
+            HidePreviousSelection(boostFirst);
             boostFirst = null;
             GameManager.Instance.IsChangeCandy = false;
             return;
@@ -238,7 +253,7 @@ public class GridManager : MonoBehaviour, ICompoment
             else
             {
                 Vector2Int first = selectCandy.Value;
-                HidePreviousSelection();
+                HidePreviousSelection(selectCandy);
 
                 if (Mathf.Abs(first.x - x) == 1 && first.y == y ||
                     Mathf.Abs(first.y - y) == 1 && first.x == x)
@@ -255,7 +270,7 @@ public class GridManager : MonoBehaviour, ICompoment
                 else if (first.x == x || first.y == y)
                 {
                     selectCandy = null;
-                    HidePreviousSelection();
+                    HidePreviousSelection(selectCandy);
                     return;
                 }
                 else
@@ -276,12 +291,16 @@ public class GridManager : MonoBehaviour, ICompoment
         int newRow = row + direction.x;
         int newCol = col + direction.y;
 
+        if (newRow < 0 || newRow >= width || newCol > 0 || newCol >= height) return;
+
+        if (levelLayout != null && (!levelLayout[row,col] || !levelLayout[newRow,newCol])) return;
+
         board.Swap(visualGrid, this, row, col, newRow, newCol);
 
         lastSwapA = new Vector2Int(row, col);
         lastSwapB = new Vector2Int(newRow, newCol);
 
-        HidePreviousSelection(); // tắt gameobject đã chọn
+        HidePreviousSelection(selectCandy); // tắt gameobject đã chọn
         selectCandy = null;
 
         GameManager.Instance.MoveStep--;
@@ -302,7 +321,7 @@ public class GridManager : MonoBehaviour, ICompoment
         {
             MatchCandy.DestroyAnfndRefill(visualGrid, this, new List<CandyVisual>(allMatches), candyPrefabs);
             // GameManager.Instance.Score = GameMechanics.AddScore(5);
-            return true;
+                      return true;
         }
         return false;
     }
@@ -311,4 +330,5 @@ public class GridManager : MonoBehaviour, ICompoment
     {
         MatchCandy.ClearRow(visualGrid, this, posCandy, candyPrefabs);
     }
+    
 }

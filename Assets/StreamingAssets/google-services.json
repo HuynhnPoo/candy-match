@@ -13,7 +13,20 @@
           "package_name": "com.nqhuynh.candysaga"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "945438211481-temodokldlsncek1ctfkcjq8rintkeoa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nqhuynh.candysaga",
+            "certificate_hash": "b1d35b5fbf125131a82555d79b2878d1848e24fa"
+          }
+        },
+        {
+          "client_id": "945438211481-7cb5pstsj910fmj1ub4u62pilqm3e0qo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAGvhJp8oWRH7H2VvTkWf6MM6qcm1o_NqM"
@@ -21,7 +34,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "945438211481-7cb5pstsj910fmj1ub4u62pilqm3e0qo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

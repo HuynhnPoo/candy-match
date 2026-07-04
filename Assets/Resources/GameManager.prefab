@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6559433953839066608}
   - component: {fileID: 4253685289519634370}
   - component: {fileID: 1397884279399112996}
-  - component: {fileID: 661984545256189612}
+  - component: {fileID: 7284893844775234972}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -75,7 +75,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 528443b68532919408f30485cb775010, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &661984545256189612
+--- !u!114 &7284893844775234972
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -627,8 +627,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8957cc41f9ad95449fe974abcee292e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  musicGame: {fileID: 0}
+  musicGame:
+  - {fileID: 0}
   sfxList: []
+  musicSource: {fileID: 0}
+  sfxSoucre: {fileID: 0}
 --- !u!1 &8831285415605705838
 GameObject:
   m_ObjectHideFlags: 0

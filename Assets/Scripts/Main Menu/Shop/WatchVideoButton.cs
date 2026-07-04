@@ -6,7 +6,7 @@ public class WatchVideoButton : ButtonBase
 {
     public override void OnClick()
     {
-        LevelPlaySample.Instance.ShowRewardedAd();
+      //  LevelPlaySample.Instance.ShowRewardedAd();
 
     }
 

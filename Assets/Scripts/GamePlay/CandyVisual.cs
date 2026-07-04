@@ -67,9 +67,6 @@ public class CandyVisual : MonoBehaviour
             this.gameObject.name = newType.ToString();
             CandyName.LoadName(newType.ToString(), this);
         }
-
-
-
     }
 
     private void OnEnable()
@@ -92,7 +89,6 @@ public class CandyVisual : MonoBehaviour
             if (Vector3.Distance(this.transform.position, targetPos) < 0.01f)
             {
                 this.transform.position = targetPos;
-
             }
         }
 

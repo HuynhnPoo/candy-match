@@ -101,6 +101,15 @@ public class UIManager : SingletonBase<UIManager>
 
         if (isLogin)
         {
+            if (canvasFade == null)
+            {
+                Debug.LogError("Không tìm thấy Canvas_AniFade! Bỏ qua hiệu ứng và chuyển thẳng Scene.");
+                ChangeScene(SceneType.MAINMENU);
+                yield break;
+            }
+            else
+            {
+
             canvasFade.SetActive(true);
             AnimationFade fade = canvasFade.GetComponent<AnimationFade>();
             fade.PlayAni("End_Trig");
@@ -120,6 +129,7 @@ public class UIManager : SingletonBase<UIManager>
             yield return new WaitForSeconds(0.7f);
 
             canvasFade.SetActive(false);
+            }
         }
     }
 

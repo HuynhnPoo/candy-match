@@ -227,8 +227,10 @@ public static class GameMechanics
 
     // thuwjc hien nor theo hình dấu cộng
     static void ImplementExplorePlus(GridManager gridManager,CandyVisual[,] candies,HashSet<CandyVisual> match,int row,int col,int size) { }
-   
-        
+
+
+    // thu hiên  di chuyên chinh xác 
+
     
 
 }

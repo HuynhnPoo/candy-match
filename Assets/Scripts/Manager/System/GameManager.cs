@@ -42,6 +42,7 @@ public class GameManager : SingletonBase<GameManager>
 
     [SerializeField] private GridManager gridManager;
 
+
     private void OnEnable()
     {
         //Coin = 10000;
@@ -75,7 +76,7 @@ public class GameManager : SingletonBase<GameManager>
         IsWinGame = false;
         IsGameOver = false;
 
-        Debug.Log("hien thi ra"+time +" "+increaseGoldBoost+" "+moveStep);
+       // Debug.Log("hien thi ra"+time +" "+increaseGoldBoost+" "+moveStep);
         GameMechanics.Init(time, increaseGoldBoost);
         OnGameOver = GameOver;
 
@@ -101,13 +102,13 @@ public class GameManager : SingletonBase<GameManager>
 
     private void Update()
     {
-       /* if ((IsWinGame || IsGameOver) && !hasEndGame)
+        if ((IsWinGame || IsGameOver) && !hasEndGame)
         {
             hasEndGame = true;
             Debug.Log("thuc hien end game");
             OnGameOver?.Invoke();
 
-        }*/
+        }
     }
 
     public void GameOver()
